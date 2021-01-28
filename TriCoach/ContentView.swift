@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Activity : Identifiable {
+struct ActivityViewModel : Identifiable {
     let sport: String
     let title: String
     let duration: String
@@ -21,7 +21,7 @@ struct Activity : Identifiable {
 
 struct ActivityGroup : Identifiable {
     let title: String
-    let activities: [Activity]
+    let activities: [ActivityViewModel]
     
     var id: String {
         title
@@ -69,7 +69,7 @@ struct ContentView : View {
 }
 
 struct ActivityCard : View {
-    let activity: Activity
+    let activity: ActivityViewModel
 
     var body: some View {
         HStack {
