@@ -9,20 +9,24 @@ import Combine
 import XCTest
 @testable import TriCoach
 
-class RecentActivityViewModelTests: XCTestCase {
+class RecentActivityViewModelTests : XCTestCase {
     private let activityRepo = MockActivityRepository()
+    private let dateFormatter = DateFormatter()
     var subject: RecentActivityViewModel!
     
     override func setUp() {
         super.setUp()
         
-        subject = RecentActivityViewModel(activityRepo: activityRepo)
+        continueAfterFailure = false
+
+        dateFormatter.timeStyle = .full
+        subject = RecentActivityViewModel(activityRepo: activityRepo, dateFormatter: dateFormatter)
     }
     
-    func testLoadActivity_shouldGroupActivitiesByWeek() throws {
-        let thisWeek = Date()
-        let lastWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: thisWeek)!
-        let twoWeeksAgo = Calendar.current.date(byAdding: .weekOfYear, value: -2, to: thisWeek)!
+    func testShouldGroupActivitiesByWeekAndSortInDescendingOrderOfDate() throws {
+        let thisWeek = Date().startOfWeek()
+        let lastWeek = thisWeek.previousWeek()
+        let twoWeeksAgo = lastWeek.previousWeek()
         
         let activitiesThisWeek = (0..<5).map { _ in Activity(date: thisWeek) }
         let activitiesLastWeek = (0..<10).map { _ in Activity(date: lastWeek) }
@@ -37,11 +41,33 @@ class RecentActivityViewModelTests: XCTestCase {
         let recentActivity = await(subject.$recentActivity)
         
         XCTAssertEqual(3, recentActivity.count)
-        XCTAssertEqual(activitiesThisWeek.count, recentActivity[0].activities.count)
-        XCTAssertEqual(activitiesLastWeek.count, recentActivity[1].activities.count)
-        XCTAssertEqual(activities2WeeksAgo.count, recentActivity[2].activities.count)
+        
+        [thisWeek, lastWeek, twoWeeksAgo].enumerated().forEach { offset, date in
+            XCTAssertEqual(dateFormatter.string(from: date), recentActivity[offset].title)
+        }
+        
+        [activitiesThisWeek, activitiesLastWeek, activities2WeeksAgo].enumerated().forEach { offset, activities in
+            XCTAssertEqual(activities.count, recentActivity[offset].content.count)
+        }
     }
     
+    func testShouldOrderActivitiesWithinGroupingInDescendingOrderOfDate() {
+        let first = Activity(date: Date())
+        let second = Activity(date: Date().addingTimeInterval(-1))
+        let third = Activity(date: Date().addingTimeInterval(-2))
+        activityRepo.add([second, third, first])
+
+        subject.loadRecentActivity()
+        let recentActivity = await(subject.$recentActivity)
+
+        XCTAssertEqual(1, recentActivity.count)
+        XCTAssertEqual(3, recentActivity[0].content.count)
+        
+        let activities = recentActivity[0].content
+        XCTAssertEqual(dateFormatter.string(from: first.date), activities[0].date)
+        XCTAssertEqual(dateFormatter.string(from: second.date), activities[1].date)
+        XCTAssertEqual(dateFormatter.string(from: third.date), activities[2].date)
+    }
 }
 
 extension XCTestCase {
@@ -80,7 +106,21 @@ class MockActivityRepository : ActivityRepository {
             .eraseToAnyPublisher()
     }
     
+    func add(_ activity: Activity) {
+        add([activity])
+    }
+    
     func add(_ activities: [Activity]) {
         self.activities.append(contentsOf: activities)
+    }
+}
+
+extension Date {
+    func startOfWeek(_ calendar: Calendar = .current) -> Date {
+        calendar.date(from: calendar.dateComponents([.year, .yearForWeekOfYear, .weekOfYear], from: self))!
+    }
+    
+    func previousWeek(_ calendar: Calendar = .current) -> Date {
+        calendar.date(byAdding: .weekOfYear, value: -1, to: self)!
     }
 }
