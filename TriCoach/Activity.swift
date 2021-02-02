@@ -8,7 +8,19 @@
 import Foundation
 
 struct Activity {
+    let sport: Sport
+    let workout: String
+    let duration: Measurement<UnitDuration>
+    let distance: Measurement<UnitLength>
     let date: Date
+}
+
+extension Activity {
+    enum Sport {
+        case swim
+        case bike
+        case run
+    }
 }
 
 extension Activity : Comparable {
