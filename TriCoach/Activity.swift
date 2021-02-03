@@ -16,7 +16,7 @@ struct Activity {
 }
 
 extension Activity {
-    enum Sport {
+    enum Sport : CaseIterable {
         case swim
         case bike
         case run
