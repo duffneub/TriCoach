@@ -18,6 +18,7 @@
 		17762E1325C102FC00BE89BD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17762E1225C102FC00BE89BD /* Preview Assets.xcassets */; };
 		17762E1E25C102FC00BE89BD /* TriCoachTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E1D25C102FC00BE89BD /* TriCoachTests.swift */; };
 		17762E2925C102FC00BE89BD /* TriCoachUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E2825C102FC00BE89BD /* TriCoachUITests.swift */; };
+		17F3346625C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3346525C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		17762E2425C102FC00BE89BD /* TriCoachUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TriCoachUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		17762E2825C102FC00BE89BD /* TriCoachUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriCoachUITests.swift; sourceTree = "<group>"; };
 		17762E2A25C102FC00BE89BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		17F3346525C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GranularRelativeDateFormatter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				172EA16A25C2542400A18196 /* ActivityRepository.swift */,
 				172EA16525C2534000A18196 /* PreviewData.swift */,
 				172EA17925C32B4300A18196 /* Activity.swift */,
+				17F3346425C9E4A600FF31C9 /* Utilities */,
 				17762E0F25C102FC00BE89BD /* Assets.xcassets */,
 				17762E1425C102FC00BE89BD /* Info.plist */,
 				17762E1125C102FC00BE89BD /* Preview Content */,
@@ -143,6 +146,14 @@
 				17762E2A25C102FC00BE89BD /* Info.plist */,
 			);
 			path = TriCoachUITests;
+			sourceTree = "<group>";
+		};
+		17F3346425C9E4A600FF31C9 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				17F3346525C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -275,6 +286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				172EA17A25C32B4300A18196 /* Activity.swift in Sources */,
+				17F3346625C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift in Sources */,
 				172EA17025C2569B00A18196 /* RecentActivityViewModel.swift in Sources */,
 				172EA16B25C2542400A18196 /* ActivityRepository.swift in Sources */,
 				17762E0E25C102FB00BE89BD /* ContentView.swift in Sources */,

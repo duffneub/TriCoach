@@ -10,14 +10,26 @@ import Foundation
 
 class RecentActivityViewModel : ObservableObject {
     private let activityRepo: ActivityRepository
-    private let dateFormatter: GranularRelativeDateFormatter
-    var calendar: Calendar = .current
+    private let categoryFormatter = GranularRelativeDateFormatter(granularity: .week)
+    private let activityDateFormatter = GranularRelativeDateFormatter(granularity: .day)
+    private let categoryComponents: Set<Calendar.Component> = [.yearForWeekOfYear, .weekOfYear]
     
-    var getCurrentDate: () -> Date = Date.init
+    var calendar: Calendar = .current {
+        didSet {
+            categoryFormatter.calendar = calendar
+            activityDateFormatter.calendar = calendar
+        }
+    }
     
-    init(activityRepo: ActivityRepository, dateFormatter: GranularRelativeDateFormatter = .init()) {
+    var getCurrentDate: () -> Date = Date.init {
+        didSet {
+            categoryFormatter.currentDate = getCurrentDate()
+            activityDateFormatter.currentDate = getCurrentDate()
+        }
+    }
+    
+    init(activityRepo: ActivityRepository) {
         self.activityRepo = activityRepo
-        self.dateFormatter = dateFormatter
     }
     
     // MARK: - Access to Model
@@ -29,40 +41,27 @@ class RecentActivityViewModel : ObservableObject {
     func loadRecentActivity() {
         activityRepo.getAll()
             .assertNoFailure()
-            .map { activities in
-                self.group(activities, by: [.yearForWeekOfYear, .weekOfYear])
-            }
+            .map(group(activities:))
             .assign(to: &$recentActivity)
     }
     
-    private func group(
-        _ activities: [Activity], by components: Set<Calendar.Component>
-    ) -> [Category<ActivitySummaryViewModel>] {
-        dateFormatter.currentDate = getCurrentDate()
-        
-        return Dictionary(grouping: activities) { activity -> Date in
-            calendar.date(from: calendar.dateComponents(components, from: activity.date))!
+    private func group(activities: [Activity]) -> [Category<ActivitySummaryViewModel>] {
+        Dictionary(grouping: activities) { activity -> Date in
+            calendar.date(from: calendar.dateComponents(categoryComponents, from: activity.date))!
         }
         .sorted {  $0.key > $1.key }
         .enumerated()
         .compactMap { offset, item in
             Category(
-                title: dateFormatter.string(from: item.key, toGranularity: .week),//categoryTitle(from: item.key),
+                title: categoryFormatter.string(from: item.key),
                 position: offset,
                 content: item.value.map {
                     .init(
                         activity: $0,
-                        date: dateFormatter.string(from: $0.date, toGranularity: .day),
-                        locale: calendar.locale ?? .current)
+                        locale: calendar.locale ?? .current,
+                        dateFormatter: activityDateFormatter)
                 }.sorted())
         }
-    }
-    
-    private func categoryTitle(from date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.setLocalizedDateFormatFromTemplate("MMMM d")
-        
-        return formatter.string(from: date)
     }
 }
 
@@ -78,141 +77,12 @@ struct Category<Content : Comparable> : Comparable {
     }
 }
 
-class GranularRelativeDateFormatter : Formatter {
-    var currentDate: Date?
-    var calendar: Calendar = .current
-    
-    override func string(for obj: Any?) -> String? {
-        guard let date = obj as? Date else {
-            return  nil
-        }
-        
-        return string(from: date, toGranularity: .day)
-    }
-    
-    override func getObjectValue(
-        _ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?,
-        for string: String,
-        errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?
-    ) -> Bool {
-        false
-    }
-    
-    // Day => Today, Yesterday, Day before Yesterday, Wednesday, Tuesday, ..., last Saturday, ..., Month/Day/Year
-    // Week => This Week, Last Week, ..., Month/Day/Year
-    // Month => This Month, Last Month, March, February, ..., Last
-    
-    // 1. Is Same Unit => Named Relative Unit || This Unit
-    // 2. Is Same Unit as -1 => Named Relative Unit || Last
-    // 3. If named unit & is > -1 * num_named_units => Named Unit
-    // 4. If named unit & is > -2 * num_named_units => Last \(Named Unit)
-    
-    func string(from date: Date, toGranularity granularity: Granularity) -> String {
-        let today = currentDate ?? Date()
-    
-        if granularity == .day {
-            if calendar.isDate(date, inSameDayAs: today) {
-                return "Today"
-            }
-            
-            let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
-            if calendar.isDate(date, inSameDayAs: yesterday) {
-                return "Yesterday"
-            }
-            
-            let lastWeek = calendar.date(byAdding: .weekOfYear, value: -1, to: today)!
-            if date > lastWeek {
-                return dayOfWeek(from: date)
-            }
-            
-            let twoWeeksAgo = calendar.date(byAdding: .weekOfYear, value: -2, to: today)!
-            if date > twoWeeksAgo {
-                return "Last \(dayOfWeek(from: date))"
-            }
-            
-            return shortString(from: date)
-        } else {
-            if calendar.compare(date, to: today, toGranularity: .weekOfYear) == .orderedSame {
-                return "This Week"
-            }
-
-            let lastWeek = calendar.date(byAdding: .weekOfYear, value: -1, to: today)!
-            if calendar.compare(date, to: lastWeek, toGranularity: .weekOfYear) == .orderedSame {
-                return "Last Week"
-            }
-         
-            return weekString(from: date)
-        }
-        
-        
-    }
-    
-//    private func relativeToToday(_ date: Date) -> RelativeDateComparisonResult {
-//        let today = currentDate ?? Date()
-//
-//        if calendar.isDate(date, inSameDayAs: today) {
-//            return .today
-//        }
-//
-//        let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
-//        if calendar.isDate(date, inSameDayAs: yesterday) {
-//            return .yesterday
-//        }
-//
-//        if calendar.compare(date, to: today, toGranularity: .weekOfYear) == .orderedSame {
-//            return .thisWeek
-//        }
-//
-//        let lastWeek = calendar.date(byAdding: .weekOfYear, value: -1, to: today)!
-//        if calendar.compare(date, to: lastWeek, toGranularity: .weekOfYear) == .orderedSame {
-//            return .lastWeek
-//        }
-//
-//        return .other
-//    }
-    
-    private func dayOfWeek(from date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.setLocalizedDateFormatFromTemplate("EEEE")
-        return formatter.string(from: date)
-    }
-    
-    private func shortString(from date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.setLocalizedDateFormatFromTemplate("M/d/yy")
-        return formatter.string(from: date)
-    }
-    
-    private func weekString(from date: Date) -> String {
-        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date))!
-        let formatter = DateFormatter()
-        formatter.setLocalizedDateFormatFromTemplate("MMMM d")
-        return formatter.string(from: startOfWeek)
-    }
-    
-    // MARK: - Granularity
-    
-    enum Granularity {
-        case day
-        case week
-    }
-    
-    // MARK: - RelativeDateComparisonResult
-    
-    private enum RelativeDateComparisonResult {
-        case today
-        case yesterday
-        case thisWeek
-        case lastWeek
-        case other
-    }
-}
-
 // MARK: - ActivitySummaryViewModel
 
 struct ActivitySummaryViewModel : Comparable {
     private let activity: Activity
     private let locale: Locale
+    private let dateFormatter: DateFormatter
     
     var sport: Activity.Sport {
         activity.sport
@@ -227,12 +97,14 @@ struct ActivitySummaryViewModel : Comparable {
             .joined(separator: " · ")
     }
     
-    let date: String
+    var date: String {
+        dateFormatter.string(from: activity.date)
+    }
 
-    init(activity: Activity, date: String, locale: Locale) {
+    init(activity: Activity, locale: Locale, dateFormatter: DateFormatter) {
         self.activity = activity
-        self.date = date
         self.locale = locale
+        self.dateFormatter = dateFormatter
     }
 
     private func hoursAndMinutesString(from duration: Measurement<UnitDuration>) -> String {
@@ -274,11 +146,5 @@ struct ActivitySummaryViewModel : Comparable {
 
     static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.activity.date > rhs.activity.date
-    }
-}
-
-extension Date {
-    func previousWeek(_ calendar: Calendar = .current) -> Date {
-        calendar.date(byAdding: .weekOfYear, value: -1, to: self)!
     }
 }
