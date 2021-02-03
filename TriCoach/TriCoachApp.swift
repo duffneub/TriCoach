@@ -11,7 +11,7 @@ import SwiftUI
 struct TriCoachApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RecentActivityView(activity: .init(activityRepo: PreviewData.FakeActivityRepository()))
         }
     }
 }

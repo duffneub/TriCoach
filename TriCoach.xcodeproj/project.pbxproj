@@ -13,11 +13,14 @@
 		172EA17525C256B000A18196 /* RecentActivityViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA17425C256B000A18196 /* RecentActivityViewModelTests.swift */; };
 		172EA17A25C32B4300A18196 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA17925C32B4300A18196 /* Activity.swift */; };
 		172F3B2925CA20A100B5F199 /* MeasurementFormatter+Sports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F3B2825CA20A100B5F199 /* MeasurementFormatter+Sports.swift */; };
+		172F3B2F25CA248200B5F199 /* Activity+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F3B2E25CA248200B5F199 /* Activity+TestHelpers.swift */; };
+		172F3B3B25CA24D800B5F199 /* Date+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F3B3A25CA24D800B5F199 /* Date+TestHelpers.swift */; };
+		172F3B4025CA250400B5F199 /* MockActivityRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F3B3F25CA250400B5F199 /* MockActivityRepository.swift */; };
+		172F3B4525CA253000B5F199 /* XCTestCase+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F3B4425CA253000B5F199 /* XCTestCase+Combine.swift */; };
 		17762E0C25C102FB00BE89BD /* TriCoachApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E0B25C102FB00BE89BD /* TriCoachApp.swift */; };
-		17762E0E25C102FB00BE89BD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E0D25C102FB00BE89BD /* ContentView.swift */; };
+		17762E0E25C102FB00BE89BD /* RecentActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E0D25C102FB00BE89BD /* RecentActivityView.swift */; };
 		17762E1025C102FC00BE89BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17762E0F25C102FC00BE89BD /* Assets.xcassets */; };
 		17762E1325C102FC00BE89BD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17762E1225C102FC00BE89BD /* Preview Assets.xcassets */; };
-		17762E1E25C102FC00BE89BD /* TriCoachTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E1D25C102FC00BE89BD /* TriCoachTests.swift */; };
 		17762E2925C102FC00BE89BD /* TriCoachUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E2825C102FC00BE89BD /* TriCoachUITests.swift */; };
 		17F3346625C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3346525C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift */; };
 /* End PBXBuildFile section */
@@ -46,14 +49,17 @@
 		172EA17425C256B000A18196 /* RecentActivityViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentActivityViewModelTests.swift; sourceTree = "<group>"; };
 		172EA17925C32B4300A18196 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		172F3B2825CA20A100B5F199 /* MeasurementFormatter+Sports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MeasurementFormatter+Sports.swift"; sourceTree = "<group>"; };
+		172F3B2E25CA248200B5F199 /* Activity+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Activity+TestHelpers.swift"; sourceTree = "<group>"; };
+		172F3B3A25CA24D800B5F199 /* Date+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+TestHelpers.swift"; sourceTree = "<group>"; };
+		172F3B3F25CA250400B5F199 /* MockActivityRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockActivityRepository.swift; sourceTree = "<group>"; };
+		172F3B4425CA253000B5F199 /* XCTestCase+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Combine.swift"; sourceTree = "<group>"; };
 		17762E0825C102FB00BE89BD /* TriCoach.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TriCoach.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17762E0B25C102FB00BE89BD /* TriCoachApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriCoachApp.swift; sourceTree = "<group>"; };
-		17762E0D25C102FB00BE89BD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		17762E0D25C102FB00BE89BD /* RecentActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentActivityView.swift; sourceTree = "<group>"; };
 		17762E0F25C102FC00BE89BD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		17762E1225C102FC00BE89BD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		17762E1425C102FC00BE89BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		17762E1925C102FC00BE89BD /* TriCoachTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TriCoachTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		17762E1D25C102FC00BE89BD /* TriCoachTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriCoachTests.swift; sourceTree = "<group>"; };
 		17762E1F25C102FC00BE89BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		17762E2425C102FC00BE89BD /* TriCoachUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TriCoachUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		17762E2825C102FC00BE89BD /* TriCoachUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriCoachUITests.swift; sourceTree = "<group>"; };
@@ -86,6 +92,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		172F3B2D25CA245B00B5F199 /* Test Doubles */ = {
+			isa = PBXGroup;
+			children = (
+				172F3B3F25CA250400B5F199 /* MockActivityRepository.swift */,
+			);
+			path = "Test Doubles";
+			sourceTree = "<group>";
+		};
+		172F3B3625CA249D00B5F199 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				172F3B2E25CA248200B5F199 /* Activity+TestHelpers.swift */,
+				172F3B3A25CA24D800B5F199 /* Date+TestHelpers.swift */,
+				172F3B4425CA253000B5F199 /* XCTestCase+Combine.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		17762DFF25C102FB00BE89BD = {
 			isa = PBXGroup;
 			children = (
@@ -110,10 +134,10 @@
 			isa = PBXGroup;
 			children = (
 				17762E0B25C102FB00BE89BD /* TriCoachApp.swift */,
-				17762E0D25C102FB00BE89BD /* ContentView.swift */,
+				172EA16525C2534000A18196 /* PreviewData.swift */,
+				17762E0D25C102FB00BE89BD /* RecentActivityView.swift */,
 				172EA16F25C2569B00A18196 /* RecentActivityViewModel.swift */,
 				172EA16A25C2542400A18196 /* ActivityRepository.swift */,
-				172EA16525C2534000A18196 /* PreviewData.swift */,
 				172EA17925C32B4300A18196 /* Activity.swift */,
 				17F3346425C9E4A600FF31C9 /* Utilities */,
 				17762E0F25C102FC00BE89BD /* Assets.xcassets */,
@@ -134,8 +158,9 @@
 		17762E1C25C102FC00BE89BD /* TriCoachTests */ = {
 			isa = PBXGroup;
 			children = (
-				17762E1D25C102FC00BE89BD /* TriCoachTests.swift */,
 				172EA17425C256B000A18196 /* RecentActivityViewModelTests.swift */,
+				172F3B3625CA249D00B5F199 /* Utilities */,
+				172F3B2D25CA245B00B5F199 /* Test Doubles */,
 				17762E1F25C102FC00BE89BD /* Info.plist */,
 			);
 			path = TriCoachTests;
@@ -293,7 +318,7 @@
 				172EA17025C2569B00A18196 /* RecentActivityViewModel.swift in Sources */,
 				172EA16B25C2542400A18196 /* ActivityRepository.swift in Sources */,
 				172F3B2925CA20A100B5F199 /* MeasurementFormatter+Sports.swift in Sources */,
-				17762E0E25C102FB00BE89BD /* ContentView.swift in Sources */,
+				17762E0E25C102FB00BE89BD /* RecentActivityView.swift in Sources */,
 				17762E0C25C102FB00BE89BD /* TriCoachApp.swift in Sources */,
 				172EA16625C2534000A18196 /* PreviewData.swift in Sources */,
 			);
@@ -304,7 +329,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				172EA17525C256B000A18196 /* RecentActivityViewModelTests.swift in Sources */,
-				17762E1E25C102FC00BE89BD /* TriCoachTests.swift in Sources */,
+				172F3B3B25CA24D800B5F199 /* Date+TestHelpers.swift in Sources */,
+				172F3B4525CA253000B5F199 /* XCTestCase+Combine.swift in Sources */,
+				172F3B2F25CA248200B5F199 /* Activity+TestHelpers.swift in Sources */,
+				172F3B4025CA250400B5F199 /* MockActivityRepository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

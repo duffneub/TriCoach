@@ -63,13 +63,13 @@ class GranularRelativeDateFormatter : RelativeDateFormatter {
             
             let lastWeek = calendar.date(byAdding: .weekOfYear, value: -1, to: currentDate)!
             if date > lastWeek {
-                setLocalizedDateFormatFromTemplate("EEEE")
+                setLocalizedDateFormatFromTemplate("E")
                 return super.string(from: date)
             }
             
             let twoWeeksAgo = calendar.date(byAdding: .weekOfYear, value: -2, to: currentDate)!
             if date > twoWeeksAgo {
-                setLocalizedDateFormatFromTemplate("EEEE")
+                setLocalizedDateFormatFromTemplate("E")
                 return "Last \(super.string(from: date))"
             }
             

@@ -69,7 +69,8 @@ class RecentActivityViewModel : ObservableObject {
 
 // MARK: - Category
 
-struct Category<Content : Comparable> : Comparable {
+struct Category<Content : Identifiable & Comparable> : Identifiable, Comparable {
+    let id = UUID()
     let title: String
     let position: Int
     let content: [Content]
@@ -83,10 +84,12 @@ struct Category<Content : Comparable> : Comparable {
 
 // MARK: - ActivitySummaryViewModel
 
-struct ActivitySummaryViewModel : Comparable {
+struct ActivitySummaryViewModel : Identifiable, Comparable {
     private let activity: Activity
     private let dateFormatter: DateFormatter
     private let measurementFormatter: MeasurementFormatter
+    
+    let id = UUID()
     
     var sport: Activity.Sport {
         activity.sport
