@@ -12,19 +12,21 @@ class RecentActivityViewModel : ObservableObject {
     private let activityRepo: ActivityRepository
     private let categoryFormatter = GranularRelativeDateFormatter(granularity: .week)
     private let activityDateFormatter = GranularRelativeDateFormatter(granularity: .day)
+    private let measurementFormatter = MeasurementFormatter()
     private let categoryComponents: Set<Calendar.Component> = [.yearForWeekOfYear, .weekOfYear]
     
     var calendar: Calendar = .current {
         didSet {
             categoryFormatter.calendar = calendar
             activityDateFormatter.calendar = calendar
+            measurementFormatter.locale = calendar.locale
         }
     }
     
-    var getCurrentDate: () -> Date = Date.init {
+    var currentDate: () -> Date = Date.init {
         didSet {
-            categoryFormatter.currentDate = getCurrentDate()
-            activityDateFormatter.currentDate = getCurrentDate()
+            categoryFormatter.currentDate = currentDate()
+            activityDateFormatter.currentDate = currentDate()
         }
     }
     
@@ -58,8 +60,8 @@ class RecentActivityViewModel : ObservableObject {
                 content: item.value.map {
                     .init(
                         activity: $0,
-                        locale: calendar.locale ?? .current,
-                        dateFormatter: activityDateFormatter)
+                        dateFormatter: activityDateFormatter,
+                        measurementFormatter: measurementFormatter)
                 }.sorted())
         }
     }
@@ -71,6 +73,8 @@ struct Category<Content : Comparable> : Comparable {
     let title: String
     let position: Int
     let content: [Content]
+    
+    // MARK: - Comparable
 
     static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.position < rhs.position
@@ -81,8 +85,8 @@ struct Category<Content : Comparable> : Comparable {
 
 struct ActivitySummaryViewModel : Comparable {
     private let activity: Activity
-    private let locale: Locale
     private let dateFormatter: DateFormatter
+    private let measurementFormatter: MeasurementFormatter
     
     var sport: Activity.Sport {
         activity.sport
@@ -93,56 +97,26 @@ struct ActivitySummaryViewModel : Comparable {
     }
     
     var summary: String {
-        [hoursAndMinutesString(from: activity.duration), sportDistanceString(from: activity.distance)]
-            .joined(separator: " · ")
+        [
+            measurementFormatter.hoursAndMinutes(from: activity.duration),
+            activity.sport == .swim ?
+                measurementFormatter.swimDistance(from: activity.distance) :
+                measurementFormatter.bikeOrRunDistance(from: activity.distance)
+        ]
+        .joined(separator: " · ")
     }
     
     var date: String {
         dateFormatter.string(from: activity.date)
     }
 
-    init(activity: Activity, locale: Locale, dateFormatter: DateFormatter) {
+    init(activity: Activity, dateFormatter: DateFormatter, measurementFormatter: MeasurementFormatter) {
         self.activity = activity
-        self.locale = locale
         self.dateFormatter = dateFormatter
-    }
-
-    private func hoursAndMinutesString(from duration: Measurement<UnitDuration>) -> String {
-        let formatter = MeasurementFormatter()
-        formatter.unitStyle = .medium
-        formatter.numberFormatter.maximumFractionDigits = 1
-
-        let total = duration.converted(to: .hours)
-        let hours = Measurement<UnitDuration>(value: total.value.rounded(.towardZero), unit: .hours)
-        let minutes = (total - hours).converted(to: .minutes)
-        
-        let durationStrings: [String?] = [
-            hours.value >= 1 ? formatter.string(from: hours) : nil,
-            minutes.value >= 1 ? formatter.string(from: minutes) : nil
-        ]
-        
-        return durationStrings.compactMap { $0 }.joined(separator: " ")
+        self.measurementFormatter = measurementFormatter
     }
     
-    private func sportDistanceString(from length: Measurement<UnitLength>) -> String {
-        let formatter = MeasurementFormatter()
-        formatter.locale = locale
-        formatter.numberFormatter.locale = locale
-        formatter.unitStyle = .medium
-        
-        var distance = activity.distance
-        if activity.sport == .swim {
-            formatter.unitOptions = .providedUnit
-            formatter.numberFormatter.maximumFractionDigits = 0
-            distance.convert(to: locale.usesMetricSystem ? .meters : .yards)
-        } else {
-            formatter.unitOptions = .providedUnit
-            formatter.numberFormatter.maximumFractionDigits = 1
-            distance.convert(to: locale.usesMetricSystem ? .kilometers : .miles)
-        }
-        
-        return formatter.string(from: distance)
-    }
+    // MARK: - Comparable
 
     static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.activity.date > rhs.activity.date

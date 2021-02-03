@@ -12,6 +12,7 @@
 		172EA17025C2569B00A18196 /* RecentActivityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA16F25C2569B00A18196 /* RecentActivityViewModel.swift */; };
 		172EA17525C256B000A18196 /* RecentActivityViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA17425C256B000A18196 /* RecentActivityViewModelTests.swift */; };
 		172EA17A25C32B4300A18196 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA17925C32B4300A18196 /* Activity.swift */; };
+		172F3B2925CA20A100B5F199 /* MeasurementFormatter+Sports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F3B2825CA20A100B5F199 /* MeasurementFormatter+Sports.swift */; };
 		17762E0C25C102FB00BE89BD /* TriCoachApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E0B25C102FB00BE89BD /* TriCoachApp.swift */; };
 		17762E0E25C102FB00BE89BD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E0D25C102FB00BE89BD /* ContentView.swift */; };
 		17762E1025C102FC00BE89BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17762E0F25C102FC00BE89BD /* Assets.xcassets */; };
@@ -44,6 +45,7 @@
 		172EA16F25C2569B00A18196 /* RecentActivityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentActivityViewModel.swift; sourceTree = "<group>"; };
 		172EA17425C256B000A18196 /* RecentActivityViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentActivityViewModelTests.swift; sourceTree = "<group>"; };
 		172EA17925C32B4300A18196 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
+		172F3B2825CA20A100B5F199 /* MeasurementFormatter+Sports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MeasurementFormatter+Sports.swift"; sourceTree = "<group>"; };
 		17762E0825C102FB00BE89BD /* TriCoach.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TriCoach.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17762E0B25C102FB00BE89BD /* TriCoachApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriCoachApp.swift; sourceTree = "<group>"; };
 		17762E0D25C102FB00BE89BD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				17F3346525C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift */,
+				172F3B2825CA20A100B5F199 /* MeasurementFormatter+Sports.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -289,6 +292,7 @@
 				17F3346625C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift in Sources */,
 				172EA17025C2569B00A18196 /* RecentActivityViewModel.swift in Sources */,
 				172EA16B25C2542400A18196 /* ActivityRepository.swift in Sources */,
+				172F3B2925CA20A100B5F199 /* MeasurementFormatter+Sports.swift in Sources */,
 				17762E0E25C102FB00BE89BD /* ContentView.swift in Sources */,
 				17762E0C25C102FB00BE89BD /* TriCoachApp.swift in Sources */,
 				172EA16625C2534000A18196 /* PreviewData.swift in Sources */,

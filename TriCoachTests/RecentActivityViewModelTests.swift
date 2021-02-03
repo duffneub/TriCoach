@@ -72,7 +72,7 @@ class RecentActivityViewModelTests : XCTestCase {
             someFriday
         ].reversed().map { Activity.test(date: $0) })
         
-        subject.getCurrentDate = { today }
+        subject.currentDate = { today }
         subject.loadRecentActivity()
         let recentActivity = await(subject.$recentActivity)
 
@@ -170,7 +170,7 @@ class RecentActivityViewModelTests : XCTestCase {
     
     func testSummary_withBikeOrRun_withMetric_shouldUseKilometers() {
         var calendar = Calendar.current
-        calendar.locale = Locale(identifier: "en_GB")
+        calendar.locale = Locale(identifier: "nn_NO")
         subject.calendar = calendar
 
         activityRepo.add([
@@ -193,7 +193,7 @@ class RecentActivityViewModelTests : XCTestCase {
         XCTAssertEqual("30 min · 1 km", run.summary)
         
         let bike = recentActivity[0].content[1]
-        XCTAssertEqual("30 min · 1.8 km", bike.summary)
+        XCTAssertEqual("30 min · 1,8 km", bike.summary)
     }
     
     func testSummary_withSwim_withImperial_shouldUseYards() {
@@ -218,7 +218,7 @@ class RecentActivityViewModelTests : XCTestCase {
     
     func testSummary_withSwim_withMetric_shouldUseMeters() {
         var calendar = Calendar.current
-        calendar.locale = Locale(identifier: "en_GB")
+        calendar.locale = Locale(identifier: "nn_NO")
         subject.calendar = calendar
 
         activityRepo.add(
@@ -233,7 +233,7 @@ class RecentActivityViewModelTests : XCTestCase {
         
         let swim = recentActivity[0].content[0]
         XCTAssertTrue(calendar.locale!.usesMetricSystem)
-        XCTAssertEqual("30 min · 1,000 m", swim.summary)
+        XCTAssertEqual("30 min · 1 000 m", swim.summary)
     }
 
     func testDate_shouldBeRelativeToToday() {
@@ -285,7 +285,7 @@ class RecentActivityViewModelTests : XCTestCase {
             someFriday
         ].reversed().map { Activity.test(date: $0) })
 
-        subject.getCurrentDate = { today }
+        subject.currentDate = { today }
         subject.loadRecentActivity()
         let recentActivity = await(subject.$recentActivity)
 
