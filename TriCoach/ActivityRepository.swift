@@ -56,7 +56,6 @@ extension HKHealthStore : ActivityService {
     }
 }
 
-// TODO: Test Me
 extension HKWorkout {
     func makeActivity() -> Activity? {
         guard let sport = workoutActivityType.sport,
@@ -74,19 +73,7 @@ extension HKWorkout {
     }
 }
 
-// TODO: Test Me
 extension HKWorkoutActivityType {
-    init(_ sport: Activity.Sport) {
-        switch sport {
-        case .swim:
-            self = .swimming
-        case .run:
-            self = .running
-        case .bike:
-            self = .cycling
-        }
-    }
-    
     var sport: Activity.Sport? {
         switch self {
         case .swimming:
