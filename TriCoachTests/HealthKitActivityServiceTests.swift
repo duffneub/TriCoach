@@ -10,6 +10,14 @@ import XCTest
 @testable import TriCoach
 
 class HealthKitActivityServiceTests : XCTestCase {
+    
+    func testInfoPlist_shouldContainReasonToReadHealthData() {
+        let bundle = Bundle(identifier: "com.duffneubauer.TriCoach")!
+        let reason = bundle.object(forInfoDictionaryKey: "NSHealthShareUsageDescription") as? String
+        
+        XCTAssertEqual("TriCoach reads your health information to display activity history.", reason)
+    }
+    
     func testMakeActivityFromHKWorkout() {
         let date = Date()
         

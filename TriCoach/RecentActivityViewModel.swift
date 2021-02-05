@@ -42,6 +42,7 @@ class RecentActivityViewModel : ObservableObject {
     
     func loadRecentActivity() {
         activityRepo.getAll()
+            .receive(on: DispatchQueue.main)
             .assertNoFailure()
             .map(group(activities:))
             .assign(to: &$recentActivity)

@@ -29,7 +29,7 @@ class RecentActivityViewModelTests : XCTestCase {
         activityRepo.add(last21Days.shuffled().map { Activity.test(date: $0) })
 
         subject.loadRecentActivity()
-        let recentActivity = await(subject.$recentActivity)
+        let recentActivity = await(subject.$recentActivity.subscribe(on: DispatchQueue.main))
 
         XCTAssertEqual(4, recentActivity.count)
         
@@ -56,7 +56,7 @@ class RecentActivityViewModelTests : XCTestCase {
         ])
 
         subject.loadRecentActivity()
-        let recentActivity = await(subject.$recentActivity)
+        let recentActivity = await(subject.$recentActivity.subscribe(on: DispatchQueue.main))
 
         XCTAssertEqual(1, recentActivity.count)
         XCTAssertEqual(3, recentActivity[0].content.count)
@@ -85,7 +85,7 @@ class RecentActivityViewModelTests : XCTestCase {
         ])
 
         subject.loadRecentActivity()
-        let recentActivity = await(subject.$recentActivity)
+        let recentActivity = await(subject.$recentActivity.subscribe(on: DispatchQueue.main))
         let activities = recentActivity[0].content
 
         XCTAssertEqual(1, recentActivity.count)
@@ -112,7 +112,7 @@ class RecentActivityViewModelTests : XCTestCase {
         ])
         
         subject.loadRecentActivity()
-        let recentActivity = await(subject.$recentActivity)
+        let recentActivity = await(subject.$recentActivity.subscribe(on: DispatchQueue.main))
         let run = recentActivity[0].content[0]
         let bike = recentActivity[0].content[1]
 
@@ -139,7 +139,7 @@ class RecentActivityViewModelTests : XCTestCase {
         ])
         
         subject.loadRecentActivity()
-        let recentActivity = await(subject.$recentActivity)
+        let recentActivity = await(subject.$recentActivity.subscribe(on: DispatchQueue.main))
         let run = recentActivity[0].content[0]
         let bike = recentActivity[0].content[1]
 
@@ -160,7 +160,7 @@ class RecentActivityViewModelTests : XCTestCase {
                 sport: .swim, duration: .init(value: 0.5, unit: .hours), distance: .init(value: 914.4, unit: .meters)))
         
         subject.loadRecentActivity()
-        let recentActivity = await(subject.$recentActivity)
+        let recentActivity = await(subject.$recentActivity.subscribe(on: DispatchQueue.main))
         let swim = recentActivity[0].content[0]
 
         XCTAssertEqual(1, recentActivity.count)
@@ -180,7 +180,7 @@ class RecentActivityViewModelTests : XCTestCase {
                 sport: .swim, duration: .init(value: 0.5, unit: .hours), distance: .init(value: 1_093.61, unit: .yards)))
         
         subject.loadRecentActivity()
-        let recentActivity = await(subject.$recentActivity)
+        let recentActivity = await(subject.$recentActivity.subscribe(on: DispatchQueue.main))
         let swim = recentActivity[0].content[0]
 
         XCTAssertEqual(1, recentActivity.count)
@@ -199,7 +199,7 @@ class RecentActivityViewModelTests : XCTestCase {
         activityRepo.add(last21Days.shuffled().map { Activity.test(date: $0) })
 
         subject.loadRecentActivity()
-        let activities = await(subject.$recentActivity).flatMap { $0.content }
+        let activities = await(subject.$recentActivity.subscribe(on: DispatchQueue.main)).flatMap { $0.content }
         
         [
             "Today",

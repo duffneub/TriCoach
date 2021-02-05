@@ -24,6 +24,7 @@
 		17762E1325C102FC00BE89BD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17762E1225C102FC00BE89BD /* Preview Assets.xcassets */; };
 		17762E2925C102FC00BE89BD /* TriCoachUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E2825C102FC00BE89BD /* TriCoachUITests.swift */; };
 		178F116B25CC855D0047BC3F /* ActivityServiceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178F116A25CC855D0047BC3F /* ActivityServiceRepositoryTests.swift */; };
+		178F117B25CC987D0047BC3F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 178F117A25CC987D0047BC3F /* HealthKit.framework */; };
 		17F3346625C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3346525C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,8 @@
 		17762E2825C102FC00BE89BD /* TriCoachUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriCoachUITests.swift; sourceTree = "<group>"; };
 		17762E2A25C102FC00BE89BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		178F116A25CC855D0047BC3F /* ActivityServiceRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityServiceRepositoryTests.swift; sourceTree = "<group>"; };
+		178F117825CC987D0047BC3F /* TriCoach.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TriCoach.entitlements; sourceTree = "<group>"; };
+		178F117A25CC987D0047BC3F /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		17F3346525C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GranularRelativeDateFormatter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -76,6 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				178F117B25CC987D0047BC3F /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +125,7 @@
 				17762E1C25C102FC00BE89BD /* TriCoachTests */,
 				17762E2725C102FC00BE89BD /* TriCoachUITests */,
 				17762E0925C102FB00BE89BD /* Products */,
+				178F117925CC987D0047BC3F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -137,6 +142,7 @@
 		17762E0A25C102FB00BE89BD /* TriCoach */ = {
 			isa = PBXGroup;
 			children = (
+				178F117825CC987D0047BC3F /* TriCoach.entitlements */,
 				17762E0B25C102FB00BE89BD /* TriCoachApp.swift */,
 				172EA16525C2534000A18196 /* PreviewData.swift */,
 				17762E0D25C102FB00BE89BD /* RecentActivityView.swift */,
@@ -179,6 +185,14 @@
 				17762E2A25C102FC00BE89BD /* Info.plist */,
 			);
 			path = TriCoachUITests;
+			sourceTree = "<group>";
+		};
+		178F117925CC987D0047BC3F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				178F117A25CC987D0047BC3F /* HealthKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		17F3346425C9E4A600FF31C9 /* Utilities */ = {
@@ -489,6 +503,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TriCoach/TriCoach.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"TriCoach/Preview Content\"";
 				DEVELOPMENT_TEAM = 9HX5X52TGA;
@@ -511,6 +526,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TriCoach/TriCoach.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"TriCoach/Preview Content\"";
 				DEVELOPMENT_TEAM = 9HX5X52TGA;

@@ -9,15 +9,15 @@ import Combine
 import XCTest
 
 extension XCTestCase {
-    func await<P : Publisher>(_ publisher: P, timeout: TimeInterval = 1.0) -> P.Output where P.Failure == Never {
+    func await<P : Publisher>(_ publisher: P, timeout: TimeInterval = 1.0, file: StaticString = #filePath, line: UInt = #line) -> P.Output where P.Failure == Never {
         try! _await(publisher, timeout: timeout)
     }
     
-    func await<P : Publisher>(_ publisher: P, timeout: TimeInterval = 1.0) throws -> P.Output {
+    func await<P : Publisher>(_ publisher: P, timeout: TimeInterval = 1.0, file: StaticString = #filePath, line: UInt = #line) throws -> P.Output {
         try _await(publisher, timeout: timeout)
     }
     
-    private func _await<P : Publisher>(_ publisher: P, timeout: TimeInterval = 1.0) throws -> P.Output {
+    private func _await<P : Publisher>(_ publisher: P, timeout: TimeInterval = 1.0, file: StaticString = #filePath, line: UInt = #line) throws -> P.Output {
         let expectation = self.expectation(description: "Publisher to either receive value or complete with error")
         var cancellable: AnyCancellable?
         
