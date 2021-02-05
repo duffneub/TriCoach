@@ -13,6 +13,10 @@ extension XCTestCase {
         try! _await(publisher, timeout: timeout)
     }
     
+    func await<P : Publisher>(_ publisher: P, timeout: TimeInterval = 1.0) throws -> P.Output {
+        try _await(publisher, timeout: timeout)
+    }
+    
     private func _await<P : Publisher>(_ publisher: P, timeout: TimeInterval = 1.0) throws -> P.Output {
         let expectation = self.expectation(description: "Publisher to either receive value or complete with error")
         var cancellable: AnyCancellable?

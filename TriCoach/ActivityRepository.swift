@@ -13,9 +13,32 @@ protocol ActivityRepository {
     func getAll() -> AnyPublisher<[Activity], Error>
 }
 
+class ActivityServiceRepository : ActivityRepository {
+    enum Error : Swift.Error {
+        case unavailable
+    }
+    
+    private let service: ActivityService
+    init(service: ActivityService) {
+        self.service = service
+    }
+    
+    func getAll() -> AnyPublisher<[Activity], Swift.Error> {
+        Result {
+            guard service.isAvailable else {
+                throw Error.unavailable
+            }
+        }
+        .publisher
+        .flatMap(self.service.requestAuthorization)
+        .flatMap(self.service.getActivities)
+        .eraseToAnyPublisher()
+    }
+}
+
 protocol ActivityService {
     var isAvailable: Bool { get }
-    func requestAuthorization() -> AnyPublisher<Bool, Error>
+    func requestAuthorization() -> AnyPublisher<Void, Error>
     func getActivities() -> AnyPublisher<[Activity], Error>
 }
 
@@ -24,24 +47,23 @@ extension HKHealthStore : ActivityService {
         Self.isHealthDataAvailable()
     }
     
-    func requestAuthorization() -> AnyPublisher<Bool, Error> {
+    func requestAuthorization() -> AnyPublisher<Void, Error> {
         Future { promise in
-            self.requestAuthorization(toShare: nil, read: [HKWorkoutType.workoutType()]) { success, error in
-                promise(error.map { .failure($0) } ?? .success(success))
+            self.requestAuthorization(toShare: nil, read: [HKWorkoutType.workoutType()]) { _, error in
+                promise(error.map { .failure($0) } ?? .success(()))
             }
         }.eraseToAnyPublisher()
     }
-    
-    // TODO: Extract predicate, limit, sort into `ActivityServiceQuery` object and test
+
     func getActivities() -> AnyPublisher<[Activity], Error> {
         Future { promise in
-            let activityTypes: [HKWorkoutActivityType] = [.swimming, .cycling, .running]
-            
             let query = HKSampleQuery(
                 sampleType: .workoutType(),
-                predicate: NSCompoundPredicate(orPredicateWithSubpredicates: activityTypes.map { HKQuery.predicateForWorkouts(with: $0) }),
+                predicate: NSCompoundPredicate(orPredicateWithSubpredicates: Activity.Sport.allCases.map {
+                    HKQuery.predicateForWorkouts(with: .init($0))
+                }),
                 limit: HKObjectQueryNoLimit,
-                sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)]
+                sortDescriptors: nil
             ) { _, samples, error in
                 guard error == nil else {
                     promise(.failure(error!))
@@ -74,6 +96,17 @@ extension HKWorkout {
 }
 
 extension HKWorkoutActivityType {
+    init(_ sport: Activity.Sport) {
+        switch sport {
+        case .swim:
+            self = .swimming
+        case .bike:
+            self = .cycling
+        case .run:
+            self = .running
+        }
+    }
+    
     var sport: Activity.Sport? {
         switch self {
         case .swimming:
