@@ -88,10 +88,29 @@ extension HKWorkout {
         
         return .init(
             sport: sport,
-            workout: "",
+            workout: name,
             duration: .init(value: duration, unit: .seconds),
             distance: .init(value: distance, unit: .miles),
             date: startDate)
+    }
+    
+    private var name: String {
+        switch workoutActivityType {
+        case .cycling, .running:
+            let isIndoorWorkout = (metadata?[HKMetadataKeyIndoorWorkout] as? Bool) ?? false
+            return ( isIndoorWorkout ? "Indoor" : "Outdoor") + " " + workoutActivityType.name
+        case .swimming:
+            var isPoolSwim = true
+            if let rawValue = metadata?[HKMetadataKeySwimmingLocationType] as? NSNumber,
+               let swimLocation = HKWorkoutSwimmingLocationType(rawValue: rawValue.intValue)
+            {
+                isPoolSwim = swimLocation == .pool
+            }
+            
+            return ( isPoolSwim ? "Pool" : "Open Water") + " " + workoutActivityType.name
+        default:
+            return ""
+        }
     }
 }
 
@@ -117,6 +136,19 @@ extension HKWorkoutActivityType {
             return .run
         default:
             return nil
+        }
+    }
+    
+    var name: String {
+        switch self {
+        case .swimming:
+            return "Swim"
+        case .cycling:
+            return "Ride"
+        case .running:
+            return "Run"
+        default:
+            return ""
         }
     }
 }

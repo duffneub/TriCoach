@@ -24,7 +24,7 @@ class HealthKitActivityServiceTests : XCTestCase {
         XCTAssertEqual(
             Activity(
                 sport: .swim,
-                workout: "",
+                workout: "Pool Swim",
                 duration: .init(value: 100, unit: .seconds),
                 distance: .init(value: 1, unit: .miles),
                 date: date),
@@ -40,8 +40,46 @@ class HealthKitActivityServiceTests : XCTestCase {
         
         XCTAssertEqual(
             Activity(
+                sport: .swim,
+                workout: "Pool Swim",
+                duration: .init(value: 100, unit: .seconds),
+                distance: .init(value: 1, unit: .miles),
+                date: date),
+            HKWorkout(
+                activityType: .swimming,
+                start: date,
+                end: date.addingTimeInterval(100000),
+                duration: 100,
+                totalEnergyBurned: nil,
+                totalDistance: HKQuantity(unit: .mile(), doubleValue: 1),
+                metadata: [
+                    HKMetadataKeySwimmingLocationType: NSNumber(value: HKWorkoutSwimmingLocationType.pool.rawValue)
+                ]).makeActivity()
+        )
+        
+        XCTAssertEqual(
+            Activity(
+                sport: .swim,
+                workout: "Open Water Swim",
+                duration: .init(value: 100, unit: .seconds),
+                distance: .init(value: 1, unit: .miles),
+                date: date),
+            HKWorkout(
+                activityType: .swimming,
+                start: date,
+                end: date.addingTimeInterval(100000),
+                duration: 100,
+                totalEnergyBurned: nil,
+                totalDistance: HKQuantity(unit: .mile(), doubleValue: 1),
+                metadata: [
+                    HKMetadataKeySwimmingLocationType: NSNumber(value: HKWorkoutSwimmingLocationType.openWater.rawValue)
+                ]).makeActivity()
+        )
+        
+        XCTAssertEqual(
+            Activity(
                 sport: .bike,
-                workout: "",
+                workout: "Outdoor Ride",
                 duration: .init(value: 100, unit: .minutes),
                 distance: .init(value: 1, unit: .kilometers),
                 date: date),
@@ -57,8 +95,46 @@ class HealthKitActivityServiceTests : XCTestCase {
         
         XCTAssertEqual(
             Activity(
+                sport: .bike,
+                workout: "Outdoor Ride",
+                duration: .init(value: 100, unit: .minutes),
+                distance: .init(value: 1, unit: .kilometers),
+                date: date),
+            HKWorkout(
+                activityType: .cycling,
+                start: date,
+                end: date.addingTimeInterval(100000),
+                duration: 100 * 60,
+                totalEnergyBurned: nil,
+                totalDistance: HKQuantity(unit: .meterUnit(with: .kilo), doubleValue: 1),
+                metadata: [
+                    HKMetadataKeyIndoorWorkout: false
+                ]).makeActivity()
+        )
+        
+        XCTAssertEqual(
+            Activity(
+                sport: .bike,
+                workout: "Indoor Ride",
+                duration: .init(value: 100, unit: .minutes),
+                distance: .init(value: 1, unit: .kilometers),
+                date: date),
+            HKWorkout(
+                activityType: .cycling,
+                start: date,
+                end: date.addingTimeInterval(100000),
+                duration: 100 * 60,
+                totalEnergyBurned: nil,
+                totalDistance: HKQuantity(unit: .meterUnit(with: .kilo), doubleValue: 1),
+                metadata: [
+                    HKMetadataKeyIndoorWorkout: true
+                ]).makeActivity()
+        )
+        
+        XCTAssertEqual(
+            Activity(
                 sport: .run,
-                workout: "",
+                workout: "Outdoor Run",
                 duration: .init(value: 100, unit: .hours),
                 distance: .init(value: 1, unit: .meters),
                 date: date),
@@ -70,6 +146,44 @@ class HealthKitActivityServiceTests : XCTestCase {
                 totalEnergyBurned: nil,
                 totalDistance: HKQuantity(unit: .meter(), doubleValue: 1),
                 metadata: nil).makeActivity()
+        )
+        
+        XCTAssertEqual(
+            Activity(
+                sport: .run,
+                workout: "Outdoor Run",
+                duration: .init(value: 100, unit: .hours),
+                distance: .init(value: 1, unit: .meters),
+                date: date),
+            HKWorkout(
+                activityType: .running,
+                start: date,
+                end: date.addingTimeInterval(100000),
+                duration: 100 * 60 * 60,
+                totalEnergyBurned: nil,
+                totalDistance: HKQuantity(unit: .meter(), doubleValue: 1),
+                metadata: [
+                    HKMetadataKeyIndoorWorkout: false
+                ]).makeActivity()
+        )
+        
+        XCTAssertEqual(
+            Activity(
+                sport: .run,
+                workout: "Indoor Run",
+                duration: .init(value: 100, unit: .hours),
+                distance: .init(value: 1, unit: .meters),
+                date: date),
+            HKWorkout(
+                activityType: .running,
+                start: date,
+                end: date.addingTimeInterval(100000),
+                duration: 100 * 60 * 60,
+                totalEnergyBurned: nil,
+                totalDistance: HKQuantity(unit: .meter(), doubleValue: 1),
+                metadata: [
+                    HKMetadataKeyIndoorWorkout: true
+                ]).makeActivity()
         )
     }
 }
