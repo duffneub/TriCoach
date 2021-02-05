@@ -20,16 +20,15 @@ struct TriCoachApp: App {
                     Text("Recent")
                 }
                 Color.red.tabItem {
-                    Image(systemName: "questionmark.circle")
+                    Image(systemName: "2.circle")
                 }
                 Color.red.tabItem {
-                    Image(systemName: "questionmark.circle")
+                    Image(systemName: "3.circle")
                 }
                 Color.red.tabItem {
-                    Image(systemName: "questionmark.circle")
+                    Image(systemName: "4.circle")
                 }
             }
-            .colorScheme(.light)
         }
     }
 }

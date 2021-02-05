@@ -44,7 +44,7 @@ struct RecentActivityView : View {
             .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(UIColor.systemGroupedBackground))
+        .background(Color.systemGroupedBackground)
         .navigationTitle("Recent")
         .onAppear {
             activity.loadRecentActivity()
@@ -54,6 +54,10 @@ struct RecentActivityView : View {
 
 struct ActivityCard : View {
     let activity: ActivitySummaryViewModel
+    
+    init(activity: ActivitySummaryViewModel) {
+        self.activity = activity
+    }
 
     var body: some View {
         HStack {
@@ -61,7 +65,7 @@ struct ActivityCard : View {
             VStack(alignment: .leading) {
                 Text(activity.title)
                     .font(.subheadline)
-                    .lineLimit(1)
+                    .lineLimit(titleLineLimit)
                 Text(activity.summary)
                     .font(.subheadline)
                     .fontWeight(.light)
@@ -77,28 +81,47 @@ struct ActivityCard : View {
         }
         .padding()
         .background(Color.white)
-        .cornerRadius(16)
-        .frame(maxHeight: 80)
-        .shadow(color: Color(white: 0, opacity: 0.1), radius: 1, x: 0, y: 2)
+        .cornerRadius(cornerRadius)
+        .frame(maxHeight: maxHeight)
+        .shadow(color: shadowColor, radius: shadowRadius, x: shadowPosition.x, y: shadowPosition.y)
     }
+    
+    // MARK: - View Constants
+    
+    private var titleLineLimit = 1
+    private var cornerRadius: CGFloat = 16
+    private var maxHeight: CGFloat = 80
+    private var shadowColor = Color(white: 0, opacity: 0.1)
+    private var shadowRadius: CGFloat = 1
+    private var shadowPosition: CGPoint = .init(x: 0, y: 2)
 }
 
 struct ActivityThumbnail : View {
     let sport: Activity.Sport
     
+    init(sport: Activity.Sport) {
+        self.sport = sport
+    }
+    
     var body: some View {
         ZStack {
-            Color("AccentColor")
-                .opacity(0.1)
+            Color.accent
+                .opacity(opacity)
                 .aspectRatio(contentMode: .fit)
-                .cornerRadius(8)
+                .cornerRadius(cornerRadius)
             Image(sport.imageName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .padding(12.0)
-                .foregroundColor(Color("AccentColor"))
+                .padding(padding)
+                .foregroundColor(.accent)
         }
     }
+    
+    // MARK: - View Constants
+    
+    private var opacity = 0.1
+    private var cornerRadius: CGFloat = 8
+    private var padding: CGFloat = 12
 }
 
 extension Activity.Sport {

@@ -1,17 +1,15 @@
 //
-//  ActivityRepository.swift
+//  ActivityServiceRepository.swift
 //  TriCoach
 //
-//  Created by Duff Neubauer on 1/27/21.
+//  Created by Duff Neubauer on 2/5/21.
 //
 
 import Combine
 import Foundation
 import HealthKit
 
-protocol ActivityRepository {
-    func getAll() -> AnyPublisher<[Activity], Error>
-}
+// MARK: - ActivityServiceRepository
 
 class ActivityServiceRepository : ActivityRepository {
     enum Error : Swift.Error {
@@ -36,11 +34,15 @@ class ActivityServiceRepository : ActivityRepository {
     }
 }
 
+// MARK: - ActivityService
+
 protocol ActivityService {
     var isAvailable: Bool { get }
     func requestAuthorization() -> AnyPublisher<Void, Error>
     func getActivities() -> AnyPublisher<[Activity], Error>
 }
+
+// MARK: - HKHealthStore + ActivityService
 
 extension HKHealthStore : ActivityService {
     var isAvailable: Bool {
@@ -78,6 +80,8 @@ extension HKHealthStore : ActivityService {
     }
 }
 
+// MARK: - HKWorkout +
+
 extension HKWorkout {
     func makeActivity() -> Activity? {
         guard let sport = workoutActivityType.sport,
@@ -113,6 +117,8 @@ extension HKWorkout {
         }
     }
 }
+
+// MARK: - HKWorkoutActivityType +
 
 extension HKWorkoutActivityType {
     init(_ sport: Activity.Sport) {
