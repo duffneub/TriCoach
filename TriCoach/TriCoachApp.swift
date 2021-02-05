@@ -14,8 +14,20 @@ struct TriCoachApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NavigationView {
-                appConfig.makeRecentActivityModule()
+            TabView {
+                appConfig.makeRecentActivityModule().tabItem {
+                    Image(systemName: "clock.arrow.circlepath")
+                    Text("Recent")
+                }
+                Color.red.tabItem {
+                    Image(systemName: "questionmark.circle")
+                }
+                Color.red.tabItem {
+                    Image(systemName: "questionmark.circle")
+                }
+                Color.red.tabItem {
+                    Image(systemName: "questionmark.circle")
+                }
             }
             .colorScheme(.light)
         }
@@ -28,6 +40,10 @@ private struct AppConfiguration {
     func makeRecentActivityModule() -> some View {
         let repo = ActivityServiceRepository(service: healthStore)
         let viewModel = RecentActivityViewModel(activityRepo: repo)
-        return RecentActivityView(activity: viewModel)
+
+        return NavigationView {
+            RecentActivityView(activity: viewModel)
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }

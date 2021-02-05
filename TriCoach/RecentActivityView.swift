@@ -30,7 +30,8 @@ struct RecentActivityView : View {
                 VStack {
                     HStack {
                         Text(category.title)
-                            .font(.headline)
+                            .font(.title3)
+                            .fontWeight(.bold)
                         Spacer()
                     }
                     VStack {
@@ -60,10 +61,10 @@ struct ActivityCard : View {
             VStack(alignment: .leading) {
                 Text(activity.title)
                     .font(.subheadline)
-                    .fontWeight(.medium)
                     .lineLimit(1)
                 Text(activity.summary)
-                    .font(.caption)
+                    .font(.subheadline)
+                    .fontWeight(.light)
                     .foregroundColor(Color.secondary)
             }
             Spacer()
@@ -71,7 +72,7 @@ struct ActivityCard : View {
                 Spacer()
                 Text(activity.date)
                     .font(.caption2)
-                    .foregroundColor(Color.secondary)
+                    .foregroundColor(Color(UIColor.tertiaryLabel))
             }
         }
         .padding()
@@ -87,11 +88,28 @@ struct ActivityThumbnail : View {
     
     var body: some View {
         ZStack {
-            Color(red: (251/255), green: (241/255), blue: (236/255))
+            Color("AccentColor")
+                .opacity(0.1)
                 .aspectRatio(contentMode: .fit)
                 .cornerRadius(8)
-            Text("?")
-                .font(.title)
+            Image(sport.imageName)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(12.0)
+                .foregroundColor(Color("AccentColor"))
+        }
+    }
+}
+
+extension Activity.Sport {
+    fileprivate var imageName: String {
+        switch self {
+        case .swim:
+            return "Swimming_Filled"
+        case .bike:
+            return "Cycling_Filled"
+        case .run:
+            return "Running_Filled"
         }
     }
 }
