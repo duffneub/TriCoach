@@ -10,12 +10,14 @@ import SwiftUI
 
 @main
 struct TriCoachApp: App {
-    private let appConfig = AppConfiguration()
+    private let config = AppConfiguration()
 
     var body: some Scene {
         WindowGroup {
             TabView {
-                appConfig.makeRecentActivityModule().tabItem {
+                NavigationView {
+                    RecentActivityView(activity: .init(activityRepo: config.activityRepo))
+                }.tabItem {
                     Image(systemName: "clock.arrow.circlepath")
                     Text("Recent")
                 }
@@ -34,15 +36,5 @@ struct TriCoachApp: App {
 }
 
 private struct AppConfiguration {
-    private let healthStore = HKHealthStore()
-    
-    func makeRecentActivityModule() -> some View {
-        let repo = ActivityServiceRepository(service: healthStore)
-        let viewModel = RecentActivityViewModel(activityRepo: repo)
-
-        return NavigationView {
-            RecentActivityView(activity: viewModel)
-        }
-        .navigationViewStyle(StackNavigationViewStyle())
-    }
+    let activityRepo: ActivityRepository = ActivityServiceRepository(service: HKHealthStore())
 }
