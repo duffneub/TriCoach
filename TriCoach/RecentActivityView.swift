@@ -10,23 +10,23 @@ import SwiftUI
 
 struct RecentActivityView : View {
     @ObservedObject var activity: RecentActivityViewModel
-    
+
     init(activity: RecentActivityViewModel) {
         self.activity = activity
         let appearance = UIBarAppearance()
         appearance.backgroundColor = .systemGroupedBackground
-        
+
         let transparentAppearance = UIBarAppearance()
         transparentAppearance.configureWithTransparentBackground()
         transparentAppearance.backgroundColor = .systemGroupedBackground
-        
+
         UINavigationBar.appearance().standardAppearance = .init(barAppearance: appearance)
         UINavigationBar.appearance().scrollEdgeAppearance = .init(barAppearance: transparentAppearance)
     }
-    
+
     var body: some View {
         ScrollView {
-            ForEach(activity.recentActivity) { category in
+            ForEach(activity.isLoading ? activity.placeholder : activity.recentActivity) { category in
                 VStack {
                     HStack {
                         Text(category.title)
@@ -43,12 +43,11 @@ struct RecentActivityView : View {
             }
             .padding()
         }
+        .redacted(reason: activity.isLoading ? .placeholder : [])
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.systemGroupedBackground)
         .navigationTitle("Recent")
-        .onAppear {
-            activity.loadRecentActivity()
-        }
+        .onAppear(perform: activity.loadRecentActivity)
     }
 }
 

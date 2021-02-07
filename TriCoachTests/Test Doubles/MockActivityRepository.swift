@@ -11,11 +11,25 @@ import Foundation
 
 class MockActivityRepository : ActivityRepository {
     private var activities: [Activity] = []
+    private var subject = PassthroughSubject<[Activity], Error>()
+    
+    var holdResponse = false {
+        didSet {
+            if !holdResponse {
+                subject.send(activities)
+                subject.send(completion: .finished)
+            }
+        }
+    }
     
     func getAll() -> AnyPublisher<[Activity], Error> {
-        Just(activities)
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
+        if !holdResponse {
+            return Just(activities)
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        } else {
+            return subject.eraseToAnyPublisher()
+        }
     }
     
     func add(_ activity: Activity) {

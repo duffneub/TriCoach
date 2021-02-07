@@ -37,14 +37,57 @@ class RecentActivityViewModel : ObservableObject {
     // MARK: - Access to Model
     
     @Published var recentActivity: [Category<ActivitySummaryViewModel>] = []
+    @Published var isLoading = false
+    
+    var placeholder: [Category<ActivitySummaryViewModel>] = [
+        .init(title: "This Week",
+              position: 1,
+              content: [
+                .init(
+                    activity: .init(
+                        sport: .swim,
+                        workout: "Pool Swim",
+                        duration: .init(value: 1, unit: .hours),
+                        distance: .init(value: 1, unit: .miles),
+                        date: Date()),
+                    dateFormatter: DateFormatter(),
+                    measurementFormatter: MeasurementFormatter()),
+                .init(
+                    activity: .init(
+                        sport: .swim,
+                        workout: "Another Pool Swim",
+                        duration: .init(value: 1, unit: .hours),
+                        distance: .init(value: 1, unit: .miles),
+                        date: Date()),
+                    dateFormatter: DateFormatter(),
+                    measurementFormatter: MeasurementFormatter()),
+                .init(
+                    activity: .init(
+                        sport: .swim,
+                        workout: "Ocean Swim",
+                        duration: .init(value: 1, unit: .hours),
+                        distance: .init(value: 1, unit: .miles),
+                        date: Date()),
+                    dateFormatter: DateFormatter(),
+                    measurementFormatter: MeasurementFormatter())
+                ])
+    ]
     
     // MARK: - Intents
     
     func loadRecentActivity() {
+        guard !isLoading else {
+            return
+        }
+
+        isLoading = true
         activityRepo.getAll()
-            .receive(on: DispatchQueue.main)
             .assertNoFailure()
             .map(group(activities:))
+            .receive(on: DispatchQueue.main)
+            .handleEvents(receiveCompletion: { [weak self] _ in
+                self?.isLoading = false
+            })
             .assign(to: &$recentActivity)
     }
     

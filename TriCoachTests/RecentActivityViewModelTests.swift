@@ -20,6 +20,18 @@ class RecentActivityViewModelTests : XCTestCase {
         subject = RecentActivityViewModel(activityRepo: activityRepo)
     }
     
+    func testIsLoading() {
+        XCTAssertFalse(subject.isLoading)
+        
+        activityRepo.holdResponse = true
+        subject.loadRecentActivity()
+        XCTAssertTrue(subject.isLoading)
+        
+        activityRepo.holdResponse = false
+        _ = await(subject.$recentActivity.subscribe(on: DispatchQueue.main))
+        XCTAssertFalse(subject.isLoading)
+    }
+    
     func testRecentActivity_shouldGroupActivitiesByWeekAndSortInDescendingOrderOfDate() {
         subject.currentDate = { Date.thu_march_26_2020 }
         
