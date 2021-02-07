@@ -17,7 +17,9 @@ struct TriCoachApp: App {
             TabView {
                 NavigationView {
                     RecentActivityView(activity: .init(activityRepo: config.activityRepo))
-                }.tabItem {
+                }
+                .navigationViewStyle(StackNavigationViewStyle())
+                .tabItem {
                     Image(systemName: "clock.arrow.circlepath")
                     Text("Recent")
                 }
