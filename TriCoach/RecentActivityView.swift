@@ -124,7 +124,7 @@ struct ActivityThumbnail : View {
 }
 
 extension Activity.Sport {
-    fileprivate var imageName: String {
+    var imageName: String {
         switch self {
         case .swim:
             return "Swimming_Filled"

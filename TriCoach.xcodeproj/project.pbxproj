@@ -26,6 +26,7 @@
 		17762E2925C102FC00BE89BD /* TriCoachUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E2825C102FC00BE89BD /* TriCoachUITests.swift */; };
 		178F116B25CC855D0047BC3F /* ActivityServiceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178F116A25CC855D0047BC3F /* ActivityServiceRepositoryTests.swift */; };
 		178F117B25CC987D0047BC3F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 178F117A25CC987D0047BC3F /* HealthKit.framework */; };
+		179CB64E25D2DDC1001D767C /* ActivityDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179CB64D25D2DDC1001D767C /* ActivityDetailsView.swift */; };
 		17F3346625C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3346525C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +74,7 @@
 		178F116A25CC855D0047BC3F /* ActivityServiceRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityServiceRepositoryTests.swift; sourceTree = "<group>"; };
 		178F117825CC987D0047BC3F /* TriCoach.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TriCoach.entitlements; sourceTree = "<group>"; };
 		178F117A25CC987D0047BC3F /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		179CB64D25D2DDC1001D767C /* ActivityDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailsView.swift; sourceTree = "<group>"; };
 		17F3346525C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GranularRelativeDateFormatter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -151,6 +153,7 @@
 				172EA16F25C2569B00A18196 /* RecentActivityViewModel.swift */,
 				172DD1C325CDB928009E3A83 /* ActivityServiceRepository.swift */,
 				172EA17925C32B4300A18196 /* Activity.swift */,
+				179CB64C25D2DDAC001D767C /* Activity Details */,
 				17F3346425C9E4A600FF31C9 /* Utilities */,
 				17762E0F25C102FC00BE89BD /* Assets.xcassets */,
 				17762E1425C102FC00BE89BD /* Info.plist */,
@@ -195,6 +198,14 @@
 				178F117A25CC987D0047BC3F /* HealthKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		179CB64C25D2DDAC001D767C /* Activity Details */ = {
+			isa = PBXGroup;
+			children = (
+				179CB64D25D2DDC1001D767C /* ActivityDetailsView.swift */,
+			);
+			path = "Activity Details";
 			sourceTree = "<group>";
 		};
 		17F3346425C9E4A600FF31C9 /* Utilities */ = {
@@ -340,6 +351,7 @@
 				17F3346625C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift in Sources */,
 				172DD1C425CDB928009E3A83 /* ActivityServiceRepository.swift in Sources */,
 				172EA17025C2569B00A18196 /* RecentActivityViewModel.swift in Sources */,
+				179CB64E25D2DDC1001D767C /* ActivityDetailsView.swift in Sources */,
 				172F3B2925CA20A100B5F199 /* MeasurementFormatter+Sports.swift in Sources */,
 				172DD1BF25CDB8F5009E3A83 /* Color+TriCoach.swift in Sources */,
 				17762E0E25C102FB00BE89BD /* RecentActivityView.swift in Sources */,
