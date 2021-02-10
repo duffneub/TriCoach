@@ -78,11 +78,8 @@ struct ActivityCard : View {
                     .foregroundColor(Color(UIColor.tertiaryLabel))
             }
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(cornerRadius)
+        .tile()
         .frame(maxHeight: maxHeight)
-        .shadow(color: shadowColor, radius: shadowRadius, x: shadowPosition.x, y: shadowPosition.y)
     }
     
     // MARK: - View Constants

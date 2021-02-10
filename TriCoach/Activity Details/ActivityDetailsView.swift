@@ -25,53 +25,9 @@ protocol MeasurementViewModel : Identifiable {
     var unit: String  { get }
 }
 
-struct TestActivityViewModel : ActivityViewModel {
-    let sport: Activity.Sport
-    let name: String
-    let shortDate: String
-    let longDate: String
-    let time: String
-    let measurements: [TestMeasurementViewModel]
-    
-    struct TestMeasurementViewModel : MeasurementViewModel {
-        let name: String
-        let value: String
-        let unit: String
-        
-        var id: String {
-            name
-        }
-    }
-}
-
-extension PreviewData {
-    static var activityViewModel = TestActivityViewModel(
-        sport: .bike,
-        name: "Aerobic Endurance",
-        shortDate: "Sun, Dec 13",
-        longDate: "Sun, Dec 13 2020",
-        time: "7:01 - 8:29 AM",
-        measurements: [
-            TestActivityViewModel.TestMeasurementViewModel(
-                name: "Duration",
-                value: "01:27:34",
-                unit: "elapsed"),
-            TestActivityViewModel.TestMeasurementViewModel(
-                name: "Distance",
-                value: "56.5",
-                unit: "kilometers"),
-            TestActivityViewModel.TestMeasurementViewModel(
-                name: "Normalized Power",
-                value: "300",
-                unit: "watts/kg"),
-            TestActivityViewModel.TestMeasurementViewModel(
-                name: "Avg. Heart Rate",
-                value: "150",
-                unit: "beats per minute"),
-        ])
-}
-
 struct ActivityDetailsView<ViewModel : ActivityViewModel>: View {
+    private let columns = [GridItem(.flexible()), GridItem(.flexible())]
+    
     var activity: ViewModel
     
     var body: some View {
@@ -83,11 +39,15 @@ struct ActivityDetailsView<ViewModel : ActivityViewModel>: View {
                     date: activity.longDate,
                     time: activity.time
                 )
-                    .padding(.bottom)
+                .padding(.bottom)
                 
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                LazyVGrid(columns: columns) {
                     ForEach(activity.measurements) { measurement in
-                        MetricWidget(name: measurement.name, value: measurement.value, unit: measurement.unit)
+                        MetricWidget(
+                            image: image(for: measurement.name),
+                            name: measurement.name,
+                            value: measurement.value,
+                            unit: measurement.unit)
                     }
                 }
                 
@@ -99,31 +59,21 @@ struct ActivityDetailsView<ViewModel : ActivityViewModel>: View {
         .background(Color.systemGroupedBackground)
         .navigationBarTitle(activity.shortDate, displayMode: .inline)
         .navigationViewStyle(StackNavigationViewStyle())
-        .navigationBarItems(trailing: Button(action: {}, label: {
-            Image(systemName: "square.and.arrow.up")
-        }))
-    }
-}
-
-struct Tile<Content : View> : View {
-    var alignment: Alignment
-    var padding: CGFloat?
-    var content: () -> Content
-    
-    init(alignment: Alignment = .center, padding: CGFloat? = nil, @ViewBuilder content: @escaping () -> Content) {
-        self.alignment = alignment
-        self.padding = padding
-        self.content = content
     }
     
-    var body: some View {
-        ZStack(alignment: alignment) {
-            Color.tileBackground
-            content()
-                .padding(.all, padding)
+    private func image(for measurement: String) -> String {
+        switch measurement {
+        case "Duration":
+            return "timer"
+        case "Distance":
+            return "location.circle.fill"
+        case "Normalized Power":
+            return "bolt.fill"
+        case "Avg. Heart Rate":
+            return "heart.fill"
+        default:
+            return ""
         }
-        .cornerRadius(12)
-        .shadow(color: Color(white: 0, opacity: 0.1), radius: 1, x: 0, y: 2)
     }
 }
 
@@ -135,13 +85,12 @@ struct Header : View {
     
     var body: some View {
         HStack {
-            Tile(padding: 14) {
-                Image(image)
-                    .resizable()
-                    .foregroundColor(.accent)
-            }
-            .aspectRatio(contentMode: .fit)
-            .frame(maxHeight: 50)
+            Image(image)
+                .resizable()
+                .foregroundColor(.accent)
+                .tile(padding: imagePadding)
+                .aspectRatio(contentMode: .fit)
+                .frame(maxHeight: imageHeight)
             
             VStack(alignment: .leading) {
                 Text(name)
@@ -160,41 +109,32 @@ struct Header : View {
             Spacer()
         }
     }
+    
+    // MARK: - View Constants
+    
+    private let imagePadding: CGFloat = 14
+    private let imageHeight: CGFloat = 50
 }
 
 struct MetricWidget : View {
+    var image: String
     var name: String
     var value: String
     var unit: String
     
-    var image: String {
-        switch name {
-        case "Duration":
-            return "timer"
-        case "Distance":
-            return "location.circle.fill"
-        case "Normalized Power":
-            return "bolt.fill"
-        case "Avg. Heart Rate":
-            return "heart.fill"
-        default:
-            return ""
-        }
-    }
-    
     var body: some View {
-        Tile(alignment: Alignment.topLeading) {
+        ZStack(alignment: Alignment.topLeading) {
             Image(systemName: image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .foregroundColor(.accent)
-                .frame(width: 14)
+                .frame(width: imageWidth)
             
-            VStack(spacing: 8) {
+            VStack(spacing: spacing) {
                 Text(name)
                     .font(.caption)
                     .foregroundColor(.secondary)
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, namePadding)
                     .multilineTextAlignment(.center)
                 Text(value)
                     .font(.title)
@@ -205,13 +145,14 @@ struct MetricWidget : View {
             }
             .frame(maxWidth: .infinity)
         }
+        .tile()
     }
-}
-
-extension Color {
-    static var tileBackground: Color {
-        .white
-    }
+    
+    // MARK: - View Constants
+    
+    private let imageWidth: CGFloat = 14
+    private let spacing: CGFloat = 8
+    private let namePadding: CGFloat = 20
 }
 
 struct ActivityDetailsView_Previews: PreviewProvider {

@@ -24,6 +24,7 @@
 		17762E1025C102FC00BE89BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17762E0F25C102FC00BE89BD /* Assets.xcassets */; };
 		17762E1325C102FC00BE89BD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17762E1225C102FC00BE89BD /* Preview Assets.xcassets */; };
 		17762E2925C102FC00BE89BD /* TriCoachUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E2825C102FC00BE89BD /* TriCoachUITests.swift */; };
+		1785C51A25D44C890016B88D /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1785C51925D44C890016B88D /* Tile.swift */; };
 		178F116B25CC855D0047BC3F /* ActivityServiceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178F116A25CC855D0047BC3F /* ActivityServiceRepositoryTests.swift */; };
 		178F117B25CC987D0047BC3F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 178F117A25CC987D0047BC3F /* HealthKit.framework */; };
 		179CB64E25D2DDC1001D767C /* ActivityDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179CB64D25D2DDC1001D767C /* ActivityDetailsView.swift */; };
@@ -71,6 +72,7 @@
 		17762E2425C102FC00BE89BD /* TriCoachUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TriCoachUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		17762E2825C102FC00BE89BD /* TriCoachUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriCoachUITests.swift; sourceTree = "<group>"; };
 		17762E2A25C102FC00BE89BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1785C51925D44C890016B88D /* Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
 		178F116A25CC855D0047BC3F /* ActivityServiceRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityServiceRepositoryTests.swift; sourceTree = "<group>"; };
 		178F117825CC987D0047BC3F /* TriCoach.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TriCoach.entitlements; sourceTree = "<group>"; };
 		178F117A25CC987D0047BC3F /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
@@ -153,6 +155,7 @@
 				172EA16F25C2569B00A18196 /* RecentActivityViewModel.swift */,
 				172DD1C325CDB928009E3A83 /* ActivityServiceRepository.swift */,
 				172EA17925C32B4300A18196 /* Activity.swift */,
+				1785C51925D44C890016B88D /* Tile.swift */,
 				179CB64C25D2DDAC001D767C /* Activity Details */,
 				17F3346425C9E4A600FF31C9 /* Utilities */,
 				17762E0F25C102FC00BE89BD /* Assets.xcassets */,
@@ -356,6 +359,7 @@
 				172DD1BF25CDB8F5009E3A83 /* Color+TriCoach.swift in Sources */,
 				17762E0E25C102FB00BE89BD /* RecentActivityView.swift in Sources */,
 				17762E0C25C102FB00BE89BD /* TriCoachApp.swift in Sources */,
+				1785C51A25D44C890016B88D /* Tile.swift in Sources */,
 				172EA16625C2534000A18196 /* PreviewData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

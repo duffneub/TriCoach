@@ -92,6 +92,50 @@ struct PreviewData {
               date: Calendar.current.date(byAdding: .day, value: -15, to: .init())!)
     ]
     
+    static var activityViewModel = TestActivityViewModel(
+        sport: .bike,
+        name: "Aerobic Endurance",
+        shortDate: "Sun, Dec 13",
+        longDate: "Sun, Dec 13 2020",
+        time: "7:01 - 8:29 AM",
+        measurements: [
+            TestActivityViewModel.TestMeasurementViewModel(
+                name: "Duration",
+                value: "01:27:34",
+                unit: "elapsed"),
+            TestActivityViewModel.TestMeasurementViewModel(
+                name: "Distance",
+                value: "56.5",
+                unit: "kilometers"),
+            TestActivityViewModel.TestMeasurementViewModel(
+                name: "Normalized Power",
+                value: "300",
+                unit: "watts/kg"),
+            TestActivityViewModel.TestMeasurementViewModel(
+                name: "Avg. Heart Rate",
+                value: "150",
+                unit: "beats per minute"),
+        ])
+    
+    struct TestActivityViewModel : ActivityViewModel {
+        let sport: Activity.Sport
+        let name: String
+        let shortDate: String
+        let longDate: String
+        let time: String
+        let measurements: [TestMeasurementViewModel]
+        
+        struct TestMeasurementViewModel : MeasurementViewModel {
+            let name: String
+            let value: String
+            let unit: String
+            
+            var id: String {
+                name
+            }
+        }
+    }
+    
     struct FakeActivityRepository : ActivityRepository {
         func getAll() -> AnyPublisher<[Activity], Error> {
             Just<[Activity]>(recentActivities).setFailureType(to: Error.self).eraseToAnyPublisher()
