@@ -137,8 +137,19 @@ struct PreviewData {
     }
     
     struct FakeActivityRepository : ActivityRepository {
+        let delay: TimeInterval
+        
+        init(delay: TimeInterval = 0) {
+            self.delay = delay
+        }
+        
         func getAll() -> AnyPublisher<[Activity], Error> {
-            Just<[Activity]>(recentActivities).setFailureType(to: Error.self).eraseToAnyPublisher()
+            Future { promise in
+                DispatchQueue.global().asyncAfter(deadline: .now() + delay) {
+                    promise(.success(PreviewData.recentActivities))
+                }
+            }
+            .eraseToAnyPublisher()
         }
     }
 }

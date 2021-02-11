@@ -37,6 +37,16 @@ struct TriCoachApp: App {
     }
 }
 
+#if IOS_SIMULATOR
+
+private struct AppConfiguration {
+    let activityRepo: ActivityRepository = PreviewData.FakeActivityRepository(delay: 1)
+}
+
+#else
+
 private struct AppConfiguration {
     let activityRepo: ActivityRepository = ActivityServiceRepository(service: HKHealthStore())
 }
+
+#endif
