@@ -129,7 +129,7 @@ struct Category<Content : Identifiable & Comparable> : Identifiable, Comparable 
 // MARK: - ActivitySummaryViewModel
 
 struct ActivitySummaryViewModel : Identifiable, Comparable {
-    private let activity: Activity
+    let activity: Activity
     private let dateFormatter: DateFormatter
     private let measurementFormatter: MeasurementFormatter
     

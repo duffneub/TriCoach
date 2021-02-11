@@ -8,27 +8,65 @@
 import MapKit
 import SwiftUI
 
-protocol ActivityViewModel {
-    associatedtype Measurement : MeasurementViewModel
+struct ActivityViewModel {
+    var sport: Activity.Sport
+    var name: String
+    var shortDate: String
+    var longDate: String
+    var time: String
+    var measurements: [MeasurementViewModel]
+}
+
+struct MeasurementViewModel : Identifiable {
+    let id = UUID()
+    let name: String
+    let value: String
+    let unit: String
+}
+
+extension Measurement {
+    fileprivate var viewModel: MeasurementViewModel {
+        .init(
+            name: name,
+            value: MeasurementFormatter().string(from: self),
+            unit: MeasurementFormatter().string(from: unit))
+    }
     
-    var sport: Activity.Sport { get }
-    var name: String { get }
-    var shortDate: String { get }
-    var longDate: String { get }
-    var time: String { get }
-    var measurements: [Measurement] { get }
+    private var name: String {
+        switch unit {
+        case is UnitDuration:
+            return "Duration"
+        case is UnitLength:
+            return "Distance"
+        default:
+            return ""
+        }
+    }
 }
 
-protocol MeasurementViewModel : Identifiable {
-    var name: String { get }
-    var value: String { get }
-    var unit: String  { get }
+extension ActivitySummaryViewModel {
+    var viewModel : ActivityViewModel {
+        .init(
+            sport: sport,
+            name: title,
+            shortDate: date,
+            longDate: DateFormatter.localizedString(
+                from: activity.date, dateStyle: .long, timeStyle: .none),
+            time: DateFormatter.localizedString(
+                from: activity.date, dateStyle: .none, timeStyle: .long),
+            measurements: [
+                activity.duration.viewModel,
+                activity.distance.viewModel
+            ])
+    }
 }
 
-struct ActivityDetailsView<ViewModel : ActivityViewModel>: View {
+
+
+struct ActivityDetailsView: View {
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
     
-    var activity: ViewModel
+    var activity: ActivityViewModel
     
     var body: some View {
         ScrollView {

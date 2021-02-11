@@ -36,7 +36,11 @@ struct RecentActivityView : View {
                     }
                     VStack {
                         ForEach(category.content) { activity in
-                            ActivityCard(activity: activity)
+                            NavigationLink(
+                                destination: ActivityDetailsView(activity: activity.viewModel)
+                            ) {
+                                ActivityCard(activity: activity)
+                            }
                         }
                     }
                 }
@@ -65,10 +69,11 @@ struct ActivityCard : View {
                 Text(activity.title)
                     .font(.subheadline)
                     .lineLimit(titleLineLimit)
+                    .foregroundColor(.primary)
                 Text(activity.summary)
                     .font(.subheadline)
                     .fontWeight(.light)
-                    .foregroundColor(Color.secondary)
+                    .foregroundColor(.secondary)
             }
             Spacer()
             VStack {
