@@ -25,7 +25,7 @@ class RecentActivityViewModelTests : XCTestCase {
         
         activityRepo.holdResponse = true
         subject.loadRecentActivity()
-        XCTAssertTrue(subject.isLoading)
+        XCTAssertTrue(await(subject.$isLoading.subscribe(on: DispatchQueue.main)))
         
         activityRepo.holdResponse = false
         _ = await(subject.$catalog.subscribe(on: DispatchQueue.main))

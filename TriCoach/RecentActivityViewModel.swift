@@ -9,9 +9,6 @@ import Combine
 import Foundation
 
 class RecentActivityViewModel : ObservableObject {
-    private let store: ActivityStore
-    
-    private let activityRepo: ActivityRepository
     private let categoryFormatter = GranularRelativeDateFormatter(granularity: .week)
     private let activityDateFormatter = GranularRelativeDateFormatter(granularity: .day)
     private let measurementFormatter = MeasurementFormatter()
@@ -31,36 +28,43 @@ class RecentActivityViewModel : ObservableObject {
         }
     }
     
-    init(store: ActivityStore = ActivityStore(), activityRepo: ActivityRepository) {
-        self.store = store
-        self.activityRepo = activityRepo
+    private var subscriptions = Set<AnyCancellable>()
+    
+    init(activityRepo: ActivityRepository) {
+        self.store = ActivityStore(activityRepo: activityRepo)
         
-        self.store.$catalog
-            .map(makeActivityGroups(_:))
+        self.store.$state
             .receive(on: DispatchQueue.main)
-            .assign(to: &$catalog)
+            .sink(receiveValue: refresh)
+            .store(in: &subscriptions)
     }
     
-    private func makeActivityGroups(_ groups: [ActivityStore.Group]) -> [Group<Activity>]{
-        groups
-            .enumerated()
-            .compactMap { offset, item in
-                Group(
-                    title: categoryFormatter.string(from: item.date),
-                    position: offset,
-                    content: item.activities.map {
-                        .init(
-                            activity: $0,
-                            dateFormatter: activityDateFormatter,
-                            measurementFormatter: measurementFormatter)
-                    }.sorted())
-            }
+    private func refresh(_ state: ActivityStore.State) {
+        isLoading = state.isLoading
+
+        catalog = state.catalog.map {
+            $0.enumerated()
+                .compactMap { offset, item in
+                    Group(
+                        title: categoryFormatter.string(from: item.date),
+                        position: offset,
+                        content: item.activities.map {
+                            .init(
+                                activity: $0,
+                                dateFormatter: activityDateFormatter,
+                                measurementFormatter: measurementFormatter)
+                        }.sorted())
+                }
+        } ?? placeholder
     }
     
     // MARK: - Access to Model
     
+//    @Published private var state: ActivityStore.State = .ready
+
+    private var store: ActivityStore
     @Published var catalog: [Group<Activity>] = []
-    @Published var isLoading = false
+    @Published var isLoading: Bool = false
     
     var placeholder: [Group<Activity>] = [
         .init(title: "This Week",
@@ -98,22 +102,8 @@ class RecentActivityViewModel : ObservableObject {
     
     // MARK: - Intents
     
-    private var subscriptions = Set<AnyCancellable>()
-    
     func loadRecentActivity() {
-        guard !isLoading else {
-            return
-        }
-
-        isLoading = true
-        activityRepo.getAll()
-            .assertNoFailure()
-            .receive(on: DispatchQueue.main)
-            .handleEvents(receiveCompletion: { [weak self] _ in
-                self?.isLoading = false
-            })
-            .sink(receiveValue: store.update(_:))
-            .store(in: &subscriptions)
+        store.loadCatalog()
     }
     
     // MARK: - Group
