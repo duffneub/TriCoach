@@ -24,7 +24,7 @@ class RecentActivityViewModelTests : XCTestCase {
         XCTAssertFalse(subject.isLoading)
         
         activityRepo.holdResponse = true
-        subject.loadRecentActivity()
+        subject.loadCatalog()
         XCTAssertTrue(await(subject.$isLoading.subscribe(on: DispatchQueue.main)))
         
         activityRepo.holdResponse = false
@@ -40,7 +40,7 @@ class RecentActivityViewModelTests : XCTestCase {
         }
         activityRepo.add(last21Days.shuffled().map { Activity.test(date: $0) })
 
-        subject.loadRecentActivity()
+        subject.loadCatalog()
         let recentActivity = await(subject.$catalog.subscribe(on: DispatchQueue.main))
 
         XCTAssertEqual(4, recentActivity.count)
@@ -67,7 +67,7 @@ class RecentActivityViewModelTests : XCTestCase {
             Activity.test(sport: .run, workout: "Outdoor Run", date: today.addingTimeInterval(2_000))
         ])
 
-        subject.loadRecentActivity()
+        subject.loadCatalog()
         let recentActivity = await(subject.$catalog.subscribe(on: DispatchQueue.main))
 
         XCTAssertEqual(1, recentActivity.count)
@@ -96,7 +96,7 @@ class RecentActivityViewModelTests : XCTestCase {
             Activity.test(duration: .init(value: 95, unit: .minutes), date: today.addingTimeInterval(2_000))
         ])
 
-        subject.loadRecentActivity()
+        subject.loadCatalog()
         let recentActivity = await(subject.$catalog.subscribe(on: DispatchQueue.main))
         let activities = recentActivity[0].content
 
@@ -123,7 +123,7 @@ class RecentActivityViewModelTests : XCTestCase {
                 sport: .bike, duration: .init(value: 0.5, unit: .hours), distance: .init(value: 2.9, unit: .kilometers))
         ])
         
-        subject.loadRecentActivity()
+        subject.loadCatalog()
         let recentActivity = await(subject.$catalog.subscribe(on: DispatchQueue.main))
         let run = recentActivity[0].content[0]
         let bike = recentActivity[0].content[1]
@@ -150,7 +150,7 @@ class RecentActivityViewModelTests : XCTestCase {
                 sport: .bike, duration: .init(value: 0.5, unit: .hours), distance: .init(value: 1.12, unit: .miles))
         ])
         
-        subject.loadRecentActivity()
+        subject.loadCatalog()
         let recentActivity = await(subject.$catalog.subscribe(on: DispatchQueue.main))
         let run = recentActivity[0].content[0]
         let bike = recentActivity[0].content[1]
@@ -171,7 +171,7 @@ class RecentActivityViewModelTests : XCTestCase {
             Activity.test(
                 sport: .swim, duration: .init(value: 0.5, unit: .hours), distance: .init(value: 914.4, unit: .meters)))
         
-        subject.loadRecentActivity()
+        subject.loadCatalog()
         let recentActivity = await(subject.$catalog.subscribe(on: DispatchQueue.main))
         let swim = recentActivity[0].content[0]
 
@@ -191,7 +191,7 @@ class RecentActivityViewModelTests : XCTestCase {
             Activity.test(
                 sport: .swim, duration: .init(value: 0.5, unit: .hours), distance: .init(value: 1_093.61, unit: .yards)))
         
-        subject.loadRecentActivity()
+        subject.loadCatalog()
         let recentActivity = await(subject.$catalog.subscribe(on: DispatchQueue.main))
         let swim = recentActivity[0].content[0]
 
@@ -210,7 +210,7 @@ class RecentActivityViewModelTests : XCTestCase {
         }
         activityRepo.add(last21Days.shuffled().map { Activity.test(date: $0) })
 
-        subject.loadRecentActivity()
+        subject.loadCatalog()
         let activities = await(subject.$catalog.subscribe(on: DispatchQueue.main)).flatMap { $0.content }
         
         [

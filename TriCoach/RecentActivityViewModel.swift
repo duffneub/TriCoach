@@ -12,6 +12,9 @@ class RecentActivityViewModel : ObservableObject {
     private let categoryFormatter = GranularRelativeDateFormatter(granularity: .week)
     private let activityDateFormatter = GranularRelativeDateFormatter(granularity: .day)
     private let measurementFormatter = MeasurementFormatter()
+
+    private var store: ActivityStore
+    private var subscriptions = Set<AnyCancellable>()
     
     var calendar: Calendar = .current {
         didSet {
@@ -27,8 +30,6 @@ class RecentActivityViewModel : ObservableObject {
             activityDateFormatter.currentDate = currentDate()
         }
     }
-    
-    private var subscriptions = Set<AnyCancellable>()
     
     init(activityRepo: ActivityRepository) {
         self.store = ActivityStore(activityRepo: activityRepo)
@@ -57,12 +58,15 @@ class RecentActivityViewModel : ObservableObject {
                 }
         } ?? placeholder
     }
+
+    // MARK: - Intents
+
+    func loadCatalog() {
+        store.loadCatalog()
+    }
     
     // MARK: - Access to Model
-    
-//    @Published private var state: ActivityStore.State = .ready
 
-    private var store: ActivityStore
     @Published var catalog: [Group<Activity>] = []
     @Published var isLoading: Bool = false
     
@@ -99,12 +103,6 @@ class RecentActivityViewModel : ObservableObject {
                     measurementFormatter: MeasurementFormatter())
                 ])
     ]
-    
-    // MARK: - Intents
-    
-    func loadRecentActivity() {
-        store.loadCatalog()
-    }
     
     // MARK: - Group
 

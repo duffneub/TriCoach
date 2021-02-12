@@ -9,16 +9,14 @@ import Combine
 import HealthKit
 import Foundation
 
-class ActivityStore : ObservableObject {
-    private var calendar: Calendar = .current
-    private var grouping: Set<Calendar.Component> = [.yearForWeekOfYear, .weekOfYear]
-    private var subscriptions = Set<AnyCancellable>()
+class ActivityStore {
+    typealias Group = (date: Date, activities: [Activity])
+
+    private let calendar: Calendar = .current
+    private let grouping: Set<Calendar.Component> = [.yearForWeekOfYear, .weekOfYear]
     private let activityRepo: ActivityRepository
     
-    typealias Group = (date: Date, activities: [Activity])
-    
     @Published var state: State = .ready
-    @Published var catalog: [Group] = []
     
     init(activityRepo: ActivityRepository) {
         self.activityRepo = activityRepo
@@ -32,7 +30,7 @@ class ActivityStore : ObservableObject {
         
         activityRepo.getAll()
             .assertNoFailure()
-            .map { activities in
+            .map { activities -> [Group] in
                 Dictionary(grouping: activities) { activity -> Date in
                     self.calendar.date(from: self.calendar.dateComponents(self.grouping, from: activity.date))!
                 }
@@ -45,6 +43,8 @@ class ActivityStore : ObservableObject {
             .assign(to: &$state)
             
     }
+
+    // MARK: - State
     
     enum State {
         case ready

@@ -51,7 +51,7 @@ struct RecentActivityView : View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.systemGroupedBackground)
         .navigationTitle("Recent")
-        .onAppear(perform: activity.loadRecentActivity)
+        .onAppear(perform: activity.loadCatalog)
     }
 }
 
