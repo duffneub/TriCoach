@@ -5,6 +5,7 @@
 //  Created by Duff Neubauer on 1/27/21.
 //
 
+import Combine
 import XCTest
 @testable import TriCoach
 
@@ -18,7 +19,11 @@ class RecentActivityViewModelTests : XCTestCase {
         
         continueAfterFailure = false
 
-        subject = RecentActivityViewModel(activityRepo: activityRepo, settings: settings)
+        subject = RecentActivityViewModel(
+            activity: ActivityStore(
+                activityRepo: activityRepo,
+                calendar: Just<Calendar>(.current).eraseToAnyPublisher()),
+            settings: settings)
     }
     
     func testIsLoading() {

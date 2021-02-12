@@ -141,7 +141,11 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             RecentActivityView()
-                .environmentObject(RecentActivityViewModel(activityRepo: PreviewData.FakeActivityRepository()))
+                .environmentObject(RecentActivityViewModel(
+                                    activity: .init(
+                                        activityRepo: PreviewData.FakeActivityRepository(),
+                                        calendar: Just<Calendar>(.current).eraseToAnyPublisher()),
+                                    settings: .init()))
         }
     }
 }

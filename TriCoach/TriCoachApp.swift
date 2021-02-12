@@ -32,7 +32,8 @@ struct TriCoachApp: App {
                 Color.red.tabItem {
                     Image(systemName: "4.circle")
                 }
-            }.environmentObject(RecentActivityViewModel(activityRepo: config.activityRepo))
+            }
+            .environmentObject(RecentActivityViewModel(activity: config.activityStore, settings: config.settingsStore))
         }
     }
 }
@@ -40,13 +41,29 @@ struct TriCoachApp: App {
 #if IOS_SIMULATOR
 
 private struct AppConfiguration {
-    let activityRepo: ActivityRepository = PreviewData.FakeActivityRepository(delay: 1)
+    let settingsStore: SettingsStore
+    let activityStore: ActivityStore
+
+    init() {
+        settingsStore = SettingsStore()
+        activityStore = ActivityStore(
+            activityRepo: PreviewData.FakeActivityRepository(delay: 1),
+            calendar: settingsStore.$calendar.eraseToAnyPublisher())
+    }
 }
 
 #else
 
 private struct AppConfiguration {
-    let activityRepo: ActivityRepository = ActivityServiceRepository(service: HKHealthStore())
+    let settingsStore: SettingsStore
+    let activityStore: ActivityStore
+
+    init() {
+        settingsStore = SettingsStore()
+        activityStore = ActivityStore(
+            activityRepo: ActivityServiceRepository(service: HKHealthStore()),
+            calendar: settingsStore.$calendar.eraseToAnyPublisher())
+    }
 }
 
 #endif

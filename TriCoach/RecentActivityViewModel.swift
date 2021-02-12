@@ -14,12 +14,12 @@ class RecentActivityViewModel : ObservableObject {
     private let measurementFormatter = MeasurementFormatter()
 
     private var settings: SettingsStore
-    private var store: ActivityStore
+    private var activity: ActivityStore
     private var subscriptions = Set<AnyCancellable>()
     
-    init(activityRepo: ActivityRepository, settings: SettingsStore = .init()) {
+    init(activity: ActivityStore, settings: SettingsStore) {
         self.settings = settings
-        self.store = ActivityStore(activityRepo: activityRepo, calendar: settings.$calendar.eraseToAnyPublisher())
+        self.activity = activity
 
         // Create Dependencies
 
@@ -40,7 +40,7 @@ class RecentActivityViewModel : ObservableObject {
             }
             .store(in: &subscriptions)
         
-        self.store.$state
+        self.activity.$state
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: refresh)
             .store(in: &subscriptions)
@@ -68,7 +68,7 @@ class RecentActivityViewModel : ObservableObject {
     // MARK: - Intents
 
     func loadCatalog() {
-        store.loadCatalog()
+        activity.loadCatalog()
     }
     
     // MARK: - Access to Model
