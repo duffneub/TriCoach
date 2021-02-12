@@ -9,6 +9,7 @@ import XCTest
 @testable import TriCoach
 
 class RecentActivityViewModelTests : XCTestCase {
+    private let settings = SettingsStore()
     private let activityRepo = MockActivityRepository()
     var subject: RecentActivityViewModel!
     
@@ -17,7 +18,7 @@ class RecentActivityViewModelTests : XCTestCase {
         
         continueAfterFailure = false
 
-        subject = RecentActivityViewModel(activityRepo: activityRepo)
+        subject = RecentActivityViewModel(activityRepo: activityRepo, settings: settings)
     }
     
     func testIsLoading() {
@@ -33,10 +34,10 @@ class RecentActivityViewModelTests : XCTestCase {
     }
     
     func testRecentActivity_shouldGroupActivitiesByWeekAndSortInDescendingOrderOfDate() {
-        subject.currentDate = { Date.thu_march_26_2020 }
+        settings.currentDate = { Date.thu_march_26_2020 }
         
         let last21Days = (0..<21).map {
-            Calendar.current.date(byAdding: .day, value: -1 * $0, to: subject.currentDate())!
+            Calendar.current.date(byAdding: .day, value: -1 * $0, to: settings.currentDate())!
         }
         activityRepo.add(last21Days.shuffled().map { Activity.test(date: $0) })
 
@@ -111,7 +112,7 @@ class RecentActivityViewModelTests : XCTestCase {
     func testActivitySummary_withBikeOrRun_withImperial_shouldUseMiles() {
         var calendar = Calendar.current
         calendar.locale = Locale(identifier: "en_US")
-        subject.calendar = calendar
+        settings.calendar = calendar
         
         activityRepo.add([
             Activity.test(
@@ -138,7 +139,7 @@ class RecentActivityViewModelTests : XCTestCase {
     func testActivitySummary_withBikeOrRun_withMetric_shouldUseKilometers() {
         var calendar = Calendar.current
         calendar.locale = Locale(identifier: "nn_NO")
-        subject.calendar = calendar
+        settings.calendar = calendar
 
         activityRepo.add([
             Activity.test(
@@ -165,7 +166,7 @@ class RecentActivityViewModelTests : XCTestCase {
     func testActivitySummary_withSwim_withImperial_shouldUseYards() {
         var calendar = Calendar.current
         calendar.locale = Locale(identifier: "en_US")
-        subject.calendar = calendar
+        settings.calendar = calendar
 
         activityRepo.add(
             Activity.test(
@@ -185,7 +186,7 @@ class RecentActivityViewModelTests : XCTestCase {
     func testActivitySummary_withSwim_withMetric_shouldUseMeters() {
         var calendar = Calendar.current
         calendar.locale = Locale(identifier: "nn_NO")
-        subject.calendar = calendar
+        settings.calendar = calendar
 
         activityRepo.add(
             Activity.test(
@@ -203,10 +204,10 @@ class RecentActivityViewModelTests : XCTestCase {
     }
 
     func testActivityDate_shouldBeRelativeToToday() {
-        subject.currentDate = { Date.thu_march_26_2020 }
+        settings.currentDate = { Date.thu_march_26_2020 }
         
         let last21Days = (0..<21).map {
-            Calendar.current.date(byAdding: .day, value: -1 * $0, to: subject.currentDate())!
+            Calendar.current.date(byAdding: .day, value: -1 * $0, to: settings.currentDate())!
         }
         activityRepo.add(last21Days.shuffled().map { Activity.test(date: $0) })
 

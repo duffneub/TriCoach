@@ -13,26 +13,32 @@ class RecentActivityViewModel : ObservableObject {
     private let activityDateFormatter = GranularRelativeDateFormatter(granularity: .day)
     private let measurementFormatter = MeasurementFormatter()
 
+    private var settings: SettingsStore
     private var store: ActivityStore
     private var subscriptions = Set<AnyCancellable>()
     
-    var calendar: Calendar = .current {
-        didSet {
-            categoryFormatter.calendar = calendar
-            activityDateFormatter.calendar = calendar
-            measurementFormatter.locale = calendar.locale
-        }
-    }
-    
-    var currentDate: () -> Date = Date.init {
-        didSet {
-            categoryFormatter.currentDate = currentDate()
-            activityDateFormatter.currentDate = currentDate()
-        }
-    }
-    
-    init(activityRepo: ActivityRepository) {
-        self.store = ActivityStore(activityRepo: activityRepo)
+    init(activityRepo: ActivityRepository, settings: SettingsStore = .init()) {
+        self.settings = settings
+        self.store = ActivityStore(activityRepo: activityRepo, calendar: settings.$calendar.eraseToAnyPublisher())
+
+        // Create Dependencies
+
+        self.settings.$calendar
+            .receive(on: DispatchQueue.main)
+            .sink { calendar in
+                self.categoryFormatter.calendar = calendar
+                self.activityDateFormatter.calendar = calendar
+                self.measurementFormatter.locale = calendar.locale
+            }
+            .store(in: &subscriptions)
+
+        self.settings.$currentDate
+            .receive(on: DispatchQueue.main)
+            .sink { currentDate in
+                self.categoryFormatter.currentDate = currentDate()
+                self.activityDateFormatter.currentDate = currentDate()
+            }
+            .store(in: &subscriptions)
         
         self.store.$state
             .receive(on: DispatchQueue.main)
