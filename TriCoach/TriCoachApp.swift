@@ -16,7 +16,7 @@ struct TriCoachApp: App {
         WindowGroup {
             TabView {
                 NavigationView {
-                    RecentActivityView(activity: .init(activityRepo: config.activityRepo))
+                    RecentActivityView()
                 }
                 .navigationViewStyle(StackNavigationViewStyle())
                 .tabItem {
@@ -32,7 +32,7 @@ struct TriCoachApp: App {
                 Color.red.tabItem {
                     Image(systemName: "4.circle")
                 }
-            }
+            }.environmentObject(RecentActivityViewModel(activityRepo: config.activityRepo))
         }
     }
 }

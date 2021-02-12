@@ -9,10 +9,9 @@ import Combine
 import SwiftUI
 
 struct RecentActivityView : View {
-    @ObservedObject var activity: RecentActivityViewModel
+    @EnvironmentObject var activity: RecentActivityViewModel
 
-    init(activity: RecentActivityViewModel) {
-        self.activity = activity
+    init() {
         let appearance = UIBarAppearance()
         appearance.backgroundColor = .systemGroupedBackground
 
@@ -141,7 +140,8 @@ extension Activity.Sport {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            RecentActivityView(activity: .init(activityRepo: PreviewData.FakeActivityRepository()))
+            RecentActivityView()
+                .environmentObject(RecentActivityViewModel(activityRepo: PreviewData.FakeActivityRepository()))
         }
     }
 }
