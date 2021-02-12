@@ -9,11 +9,12 @@ import Combine
 import Foundation
 
 class RecentActivityViewModel : ObservableObject {
+    private let store: ActivityStore
+    
     private let activityRepo: ActivityRepository
     private let categoryFormatter = GranularRelativeDateFormatter(granularity: .week)
     private let activityDateFormatter = GranularRelativeDateFormatter(granularity: .day)
     private let measurementFormatter = MeasurementFormatter()
-    private let categoryComponents: Set<Calendar.Component> = [.yearForWeekOfYear, .weekOfYear]
     
     var calendar: Calendar = .current {
         didSet {
@@ -30,16 +31,38 @@ class RecentActivityViewModel : ObservableObject {
         }
     }
     
-    init(activityRepo: ActivityRepository) {
+    init(store: ActivityStore = ActivityStore(), activityRepo: ActivityRepository) {
+        self.store = store
         self.activityRepo = activityRepo
+        
+        self.store.$catalog
+            .map(makeActivityGroups(_:))
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$catalog)
+    }
+    
+    private func makeActivityGroups(_ groups: [ActivityStore.Group]) -> [Group<Activity>]{
+        groups
+            .enumerated()
+            .compactMap { offset, item in
+                Group(
+                    title: categoryFormatter.string(from: item.date),
+                    position: offset,
+                    content: item.activities.map {
+                        .init(
+                            activity: $0,
+                            dateFormatter: activityDateFormatter,
+                            measurementFormatter: measurementFormatter)
+                    }.sorted())
+            }
     }
     
     // MARK: - Access to Model
     
-    @Published var recentActivity: [Category<ActivitySummaryViewModel>] = []
+    @Published var catalog: [Group<Activity>] = []
     @Published var isLoading = false
     
-    var placeholder: [Category<ActivitySummaryViewModel>] = [
+    var placeholder: [Group<Activity>] = [
         .init(title: "This Week",
               position: 1,
               content: [
@@ -75,6 +98,8 @@ class RecentActivityViewModel : ObservableObject {
     
     // MARK: - Intents
     
+    private var subscriptions = Set<AnyCancellable>()
+    
     func loadRecentActivity() {
         guard !isLoading else {
             return
@@ -83,89 +108,70 @@ class RecentActivityViewModel : ObservableObject {
         isLoading = true
         activityRepo.getAll()
             .assertNoFailure()
-            .map(group(activities:))
             .receive(on: DispatchQueue.main)
             .handleEvents(receiveCompletion: { [weak self] _ in
                 self?.isLoading = false
             })
-            .assign(to: &$recentActivity)
+            .sink(receiveValue: store.update(_:))
+            .store(in: &subscriptions)
     }
     
-    private func group(activities: [Activity]) -> [Category<ActivitySummaryViewModel>] {
-        Dictionary(grouping: activities) { activity -> Date in
-            calendar.date(from: calendar.dateComponents(categoryComponents, from: activity.date))!
-        }
-        .sorted {  $0.key > $1.key }
-        .enumerated()
-        .compactMap { offset, item in
-            Category(
-                title: categoryFormatter.string(from: item.key),
-                position: offset,
-                content: item.value.map {
-                    .init(
-                        activity: $0,
-                        dateFormatter: activityDateFormatter,
-                        measurementFormatter: measurementFormatter)
-                }.sorted())
+    // MARK: - Group
+
+    struct Group<Content : Identifiable & Comparable> : Identifiable, Comparable {
+        let id = UUID()
+        let title: String
+        let position: Int
+        let content: [Content]
+        
+        // MARK: - Comparable
+
+        static func < (lhs: Self, rhs: Self) -> Bool {
+            lhs.position < rhs.position
         }
     }
-}
-
-// MARK: - Category
-
-struct Category<Content : Identifiable & Comparable> : Identifiable, Comparable {
-    let id = UUID()
-    let title: String
-    let position: Int
-    let content: [Content]
     
-    // MARK: - Comparable
+    // MARK: - Activity
 
-    static func < (lhs: Self, rhs: Self) -> Bool {
-        lhs.position < rhs.position
-    }
-}
+    struct Activity : Identifiable, Comparable {
+        let activity: TriCoach.Activity
+        private let dateFormatter: DateFormatter
+        private let measurementFormatter: MeasurementFormatter
+        
+        let id = UUID()
+        
+        var sport: TriCoach.Activity.Sport {
+            activity.sport
+        }
+        
+        var title: String {
+            activity.workout
+        }
+        
+        var summary: String {
+            [
+                measurementFormatter.hoursAndMinutes(from: activity.duration),
+                activity.sport == .swim ?
+                    measurementFormatter.swimDistance(from: activity.distance) :
+                    measurementFormatter.bikeOrRunDistance(from: activity.distance)
+            ]
+            .joined(separator: " · ")
+        }
+        
+        var date: String {
+            dateFormatter.string(from: activity.date)
+        }
 
-// MARK: - ActivitySummaryViewModel
+        init(activity: TriCoach.Activity, dateFormatter: DateFormatter, measurementFormatter: MeasurementFormatter) {
+            self.activity = activity
+            self.dateFormatter = dateFormatter
+            self.measurementFormatter = measurementFormatter
+        }
+        
+        // MARK: - Comparable
 
-struct ActivitySummaryViewModel : Identifiable, Comparable {
-    let activity: Activity
-    private let dateFormatter: DateFormatter
-    private let measurementFormatter: MeasurementFormatter
-    
-    let id = UUID()
-    
-    var sport: Activity.Sport {
-        activity.sport
-    }
-    
-    var title: String {
-        activity.workout
-    }
-    
-    var summary: String {
-        [
-            measurementFormatter.hoursAndMinutes(from: activity.duration),
-            activity.sport == .swim ?
-                measurementFormatter.swimDistance(from: activity.distance) :
-                measurementFormatter.bikeOrRunDistance(from: activity.distance)
-        ]
-        .joined(separator: " · ")
-    }
-    
-    var date: String {
-        dateFormatter.string(from: activity.date)
-    }
-
-    init(activity: Activity, dateFormatter: DateFormatter, measurementFormatter: MeasurementFormatter) {
-        self.activity = activity
-        self.dateFormatter = dateFormatter
-        self.measurementFormatter = measurementFormatter
-    }
-    
-    // MARK: - Comparable
-
-    static func < (lhs: Self, rhs: Self) -> Bool {
-        lhs.activity.date > rhs.activity.date
+        static func < (lhs: Self, rhs: Self) -> Bool {
+            lhs.activity.date > rhs.activity.date
+        }
     }
 }

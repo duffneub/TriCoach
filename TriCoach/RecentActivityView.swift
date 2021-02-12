@@ -26,7 +26,7 @@ struct RecentActivityView : View {
 
     var body: some View {
         ScrollView {
-            ForEach(activity.isLoading ? activity.placeholder : activity.recentActivity) { category in
+            ForEach(activity.isLoading ? activity.placeholder : activity.catalog) { category in
                 VStack {
                     HStack {
                         Text(category.title)
@@ -56,9 +56,9 @@ struct RecentActivityView : View {
 }
 
 struct ActivityCard : View {
-    let activity: ActivitySummaryViewModel
+    let activity: RecentActivityViewModel.Activity
     
-    init(activity: ActivitySummaryViewModel) {
+    init(activity: RecentActivityViewModel.Activity) {
         self.activity = activity
     }
 
