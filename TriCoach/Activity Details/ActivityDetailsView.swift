@@ -44,7 +44,7 @@ extension Measurement {
     }
 }
 
-extension RecentActivityViewModel.Activity {
+extension ActivityCatalogViewModel.Activity {
     var viewModel : ActivityViewModel {
         .init(
             sport: sport,

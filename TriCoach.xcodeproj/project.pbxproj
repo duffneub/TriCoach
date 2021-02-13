@@ -10,8 +10,8 @@
 		172DD1BF25CDB8F5009E3A83 /* Color+TriCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172DD1BE25CDB8F5009E3A83 /* Color+TriCoach.swift */; };
 		172DD1C425CDB928009E3A83 /* ActivityServiceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172DD1C325CDB928009E3A83 /* ActivityServiceRepository.swift */; };
 		172EA16625C2534000A18196 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA16525C2534000A18196 /* PreviewData.swift */; };
-		172EA17025C2569B00A18196 /* RecentActivityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA16F25C2569B00A18196 /* RecentActivityViewModel.swift */; };
-		172EA17525C256B000A18196 /* RecentActivityViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA17425C256B000A18196 /* RecentActivityViewModelTests.swift */; };
+		172EA17025C2569B00A18196 /* ActivityCatalogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA16F25C2569B00A18196 /* ActivityCatalogViewModel.swift */; };
+		172EA17525C256B000A18196 /* ActivityCatalogViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA17425C256B000A18196 /* ActivityCatalogViewModelTests.swift */; };
 		172EA17A25C32B4300A18196 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA17925C32B4300A18196 /* Activity.swift */; };
 		172F3B2925CA20A100B5F199 /* MeasurementFormatter+Sports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F3B2825CA20A100B5F199 /* MeasurementFormatter+Sports.swift */; };
 		172F3B2F25CA248200B5F199 /* Activity+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F3B2E25CA248200B5F199 /* Activity+TestHelpers.swift */; };
@@ -21,7 +21,7 @@
 		172F3B5625CB326100B5F199 /* HealthKitActivityServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F3B5525CB326100B5F199 /* HealthKitActivityServiceTests.swift */; };
 		174B43B525D6DE0900FAC32F /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174B43B425D6DE0900FAC32F /* SettingsStore.swift */; };
 		17762E0C25C102FB00BE89BD /* TriCoachApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E0B25C102FB00BE89BD /* TriCoachApp.swift */; };
-		17762E0E25C102FB00BE89BD /* RecentActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E0D25C102FB00BE89BD /* RecentActivityView.swift */; };
+		17762E0E25C102FB00BE89BD /* ActivityCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E0D25C102FB00BE89BD /* ActivityCatalogView.swift */; };
 		17762E1025C102FC00BE89BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17762E0F25C102FC00BE89BD /* Assets.xcassets */; };
 		17762E1325C102FC00BE89BD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17762E1225C102FC00BE89BD /* Preview Assets.xcassets */; };
 		17762E2925C102FC00BE89BD /* TriCoachUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762E2825C102FC00BE89BD /* TriCoachUITests.swift */; };
@@ -54,8 +54,8 @@
 		172DD1BE25CDB8F5009E3A83 /* Color+TriCoach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+TriCoach.swift"; sourceTree = "<group>"; };
 		172DD1C325CDB928009E3A83 /* ActivityServiceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityServiceRepository.swift; sourceTree = "<group>"; };
 		172EA16525C2534000A18196 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
-		172EA16F25C2569B00A18196 /* RecentActivityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentActivityViewModel.swift; sourceTree = "<group>"; };
-		172EA17425C256B000A18196 /* RecentActivityViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentActivityViewModelTests.swift; sourceTree = "<group>"; };
+		172EA16F25C2569B00A18196 /* ActivityCatalogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCatalogViewModel.swift; sourceTree = "<group>"; };
+		172EA17425C256B000A18196 /* ActivityCatalogViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCatalogViewModelTests.swift; sourceTree = "<group>"; };
 		172EA17925C32B4300A18196 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		172F3B2825CA20A100B5F199 /* MeasurementFormatter+Sports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MeasurementFormatter+Sports.swift"; sourceTree = "<group>"; };
 		172F3B2E25CA248200B5F199 /* Activity+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Activity+TestHelpers.swift"; sourceTree = "<group>"; };
@@ -66,7 +66,7 @@
 		174B43B425D6DE0900FAC32F /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
 		17762E0825C102FB00BE89BD /* TriCoach.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TriCoach.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17762E0B25C102FB00BE89BD /* TriCoachApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriCoachApp.swift; sourceTree = "<group>"; };
-		17762E0D25C102FB00BE89BD /* RecentActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentActivityView.swift; sourceTree = "<group>"; };
+		17762E0D25C102FB00BE89BD /* ActivityCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCatalogView.swift; sourceTree = "<group>"; };
 		17762E0F25C102FC00BE89BD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		17762E1225C102FC00BE89BD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		17762E1425C102FC00BE89BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -155,8 +155,8 @@
 				178F117825CC987D0047BC3F /* TriCoach.entitlements */,
 				17762E0B25C102FB00BE89BD /* TriCoachApp.swift */,
 				172EA16525C2534000A18196 /* PreviewData.swift */,
-				17762E0D25C102FB00BE89BD /* RecentActivityView.swift */,
-				172EA16F25C2569B00A18196 /* RecentActivityViewModel.swift */,
+				17762E0D25C102FB00BE89BD /* ActivityCatalogView.swift */,
+				172EA16F25C2569B00A18196 /* ActivityCatalogViewModel.swift */,
 				172DD1C325CDB928009E3A83 /* ActivityServiceRepository.swift */,
 				17FE2CE225D60048006E516D /* ActivityStore.swift */,
 				174B43B425D6DE0900FAC32F /* SettingsStore.swift */,
@@ -182,7 +182,7 @@
 		17762E1C25C102FC00BE89BD /* TriCoachTests */ = {
 			isa = PBXGroup;
 			children = (
-				172EA17425C256B000A18196 /* RecentActivityViewModelTests.swift */,
+				172EA17425C256B000A18196 /* ActivityCatalogViewModelTests.swift */,
 				172F3B5525CB326100B5F199 /* HealthKitActivityServiceTests.swift */,
 				178F116A25CC855D0047BC3F /* ActivityServiceRepositoryTests.swift */,
 				172F3B3625CA249D00B5F199 /* Utilities */,
@@ -360,11 +360,11 @@
 				17F3346625C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift in Sources */,
 				172DD1C425CDB928009E3A83 /* ActivityServiceRepository.swift in Sources */,
 				174B43B525D6DE0900FAC32F /* SettingsStore.swift in Sources */,
-				172EA17025C2569B00A18196 /* RecentActivityViewModel.swift in Sources */,
+				172EA17025C2569B00A18196 /* ActivityCatalogViewModel.swift in Sources */,
 				179CB64E25D2DDC1001D767C /* ActivityDetailsView.swift in Sources */,
 				172F3B2925CA20A100B5F199 /* MeasurementFormatter+Sports.swift in Sources */,
 				172DD1BF25CDB8F5009E3A83 /* Color+TriCoach.swift in Sources */,
-				17762E0E25C102FB00BE89BD /* RecentActivityView.swift in Sources */,
+				17762E0E25C102FB00BE89BD /* ActivityCatalogView.swift in Sources */,
 				17FE2CE325D60048006E516D /* ActivityStore.swift in Sources */,
 				17762E0C25C102FB00BE89BD /* TriCoachApp.swift in Sources */,
 				1785C51A25D44C890016B88D /* Tile.swift in Sources */,
@@ -376,7 +376,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				172EA17525C256B000A18196 /* RecentActivityViewModelTests.swift in Sources */,
+				172EA17525C256B000A18196 /* ActivityCatalogViewModelTests.swift in Sources */,
 				172F3B3B25CA24D800B5F199 /* Date+TestHelpers.swift in Sources */,
 				178F116B25CC855D0047BC3F /* ActivityServiceRepositoryTests.swift in Sources */,
 				172F3B4525CA253000B5F199 /* XCTestCase+Combine.swift in Sources */,
