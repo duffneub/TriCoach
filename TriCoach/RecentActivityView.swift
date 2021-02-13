@@ -35,11 +35,7 @@ struct RecentActivityView : View {
                     }
                     VStack {
                         ForEach(category.content) { activity in
-                            NavigationLink(
-                                destination: ActivityDetailsView(activity: activity.viewModel)
-                            ) {
-                                ActivityCard(activity: activity)
-                            }
+                            ActivityCard(activity: activity)
                         }
                     }
                 }
@@ -55,31 +51,38 @@ struct RecentActivityView : View {
 }
 
 struct ActivityCard : View {
-    let activity: RecentActivityViewModel.Activity
+    @ObservedObject var activity: RecentActivityViewModel.Activity
     
     init(activity: RecentActivityViewModel.Activity) {
         self.activity = activity
     }
 
     var body: some View {
-        HStack {
-            ActivityThumbnail(sport: activity.sport)
-            VStack(alignment: .leading) {
-                Text(activity.title)
-                    .font(.subheadline)
-                    .lineLimit(titleLineLimit)
-                    .foregroundColor(.primary)
-                Text(activity.summary)
-                    .font(.subheadline)
-                    .fontWeight(.light)
-                    .foregroundColor(.secondary)
-            }
-            Spacer()
-            VStack {
+        NavigationLink(
+            destination: ActivityDetailsView(activity: activity.viewModel),
+            isActive: .init(
+                get: { activity.isSelected },
+                set: { activity.isSelected = $0 })
+        ) {
+            HStack {
+                ActivityThumbnail(sport: activity.sport)
+                VStack(alignment: .leading) {
+                    Text(activity.title)
+                        .font(.subheadline)
+                        .lineLimit(titleLineLimit)
+                        .foregroundColor(.primary)
+                    Text(activity.summary)
+                        .font(.subheadline)
+                        .fontWeight(.light)
+                        .foregroundColor(.secondary)
+                }
                 Spacer()
-                Text(activity.date)
-                    .font(.caption2)
-                    .foregroundColor(Color(UIColor.tertiaryLabel))
+                VStack {
+                    Spacer()
+                    Text(activity.date)
+                        .font(.caption2)
+                        .foregroundColor(Color(UIColor.tertiaryLabel))
+                }
             }
         }
         .tile()

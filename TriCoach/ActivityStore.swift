@@ -19,6 +19,7 @@ class ActivityStore {
     private var activities: [Activity] = []
 
     @Published var state: State = .ready
+    @Published private(set) var selectedActivity: Activity?
 
     private var subscriptions = Set<AnyCancellable>()
     
@@ -55,6 +56,14 @@ class ActivityStore {
         .map { (date: $0.key, activities: $0.value) }
 
         return .success(groups)
+    }
+
+    func select(_ activity: Activity) {
+        selectedActivity = activity
+    }
+    
+    func deselect(_ activity: Activity) {
+        selectedActivity = nil
     }
 
     // MARK: - State

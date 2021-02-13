@@ -20,6 +20,23 @@ class RecentActivityViewModel : ObservableObject {
     init(activity: ActivityStore, settings: SettingsStore) {
         self.settings = settings
         self.activity = activity
+        
+        self.placeholder = [
+            .init(title: "This Week",
+                 position: 1,
+                 content: ["Pool Swim", "Another Pool Swim", "Ocean Swim"].map { title in
+                   .init(
+                       activity: .init(
+                           sport: .swim,
+                           workout: title,
+                           duration: .init(value: 1, unit: .hours),
+                           distance: .init(value: 1, unit: .miles),
+                           date: Date()),
+                       dateFormatter: DateFormatter(),
+                       measurementFormatter: MeasurementFormatter(),
+                    activityStore: activity)
+                 })
+        ]
 
         // Create Dependencies
 
@@ -59,7 +76,8 @@ class RecentActivityViewModel : ObservableObject {
                             .init(
                                 activity: $0,
                                 dateFormatter: activityDateFormatter,
-                                measurementFormatter: measurementFormatter)
+                                measurementFormatter: measurementFormatter,
+                                activityStore: activity)
                         }.sorted())
                 }
         } ?? placeholder
@@ -76,39 +94,7 @@ class RecentActivityViewModel : ObservableObject {
     @Published var catalog: [Group<Activity>] = []
     @Published var isLoading: Bool = false
     
-    var placeholder: [Group<Activity>] = [
-        .init(title: "This Week",
-              position: 1,
-              content: [
-                .init(
-                    activity: .init(
-                        sport: .swim,
-                        workout: "Pool Swim",
-                        duration: .init(value: 1, unit: .hours),
-                        distance: .init(value: 1, unit: .miles),
-                        date: Date()),
-                    dateFormatter: DateFormatter(),
-                    measurementFormatter: MeasurementFormatter()),
-                .init(
-                    activity: .init(
-                        sport: .swim,
-                        workout: "Another Pool Swim",
-                        duration: .init(value: 1, unit: .hours),
-                        distance: .init(value: 1, unit: .miles),
-                        date: Date()),
-                    dateFormatter: DateFormatter(),
-                    measurementFormatter: MeasurementFormatter()),
-                .init(
-                    activity: .init(
-                        sport: .swim,
-                        workout: "Ocean Swim",
-                        duration: .init(value: 1, unit: .hours),
-                        distance: .init(value: 1, unit: .miles),
-                        date: Date()),
-                    dateFormatter: DateFormatter(),
-                    measurementFormatter: MeasurementFormatter())
-                ])
-    ]
+    var placeholder: [Group<Activity>]
     
     // MARK: - Group
 
@@ -127,12 +113,47 @@ class RecentActivityViewModel : ObservableObject {
     
     // MARK: - Activity
 
-    struct Activity : Identifiable, Comparable {
+    class Activity : Identifiable, Comparable, ObservableObject {
         let activity: TriCoach.Activity
         private let dateFormatter: DateFormatter
         private let measurementFormatter: MeasurementFormatter
+        private var activityStore: ActivityStore
+
+        @Published private var _isSelected: Bool = false
         
         let id = UUID()
+
+        init(
+            activity: TriCoach.Activity,
+            dateFormatter: DateFormatter,
+            measurementFormatter: MeasurementFormatter,
+            activityStore: ActivityStore
+        ) {
+            self.activity = activity
+            self.dateFormatter = dateFormatter
+            self.measurementFormatter = measurementFormatter
+            self.activityStore = activityStore
+            
+            self.activityStore.$selectedActivity
+                .map { $0 == activity }
+                .assign(to: &$_isSelected)
+        }
+        
+        // MARK: - Intents
+        
+        var isSelected: Bool {
+            get {
+                _isSelected
+            } set {
+                if newValue {
+                    activityStore.select(activity)
+                } else {
+                    activityStore.deselect(activity)
+                }
+            }
+        }
+        
+        // MARK: - Access to Model
         
         var sport: TriCoach.Activity.Sport {
             activity.sport
@@ -155,17 +176,17 @@ class RecentActivityViewModel : ObservableObject {
         var date: String {
             dateFormatter.string(from: activity.date)
         }
-
-        init(activity: TriCoach.Activity, dateFormatter: DateFormatter, measurementFormatter: MeasurementFormatter) {
-            self.activity = activity
-            self.dateFormatter = dateFormatter
-            self.measurementFormatter = measurementFormatter
-        }
         
         // MARK: - Comparable
 
-        static func < (lhs: Self, rhs: Self) -> Bool {
+        static func < (lhs: RecentActivityViewModel.Activity, rhs: RecentActivityViewModel.Activity) -> Bool {
             lhs.activity.date > rhs.activity.date
+        }
+
+        // MARK: - Equatable
+
+        static func == (lhs: RecentActivityViewModel.Activity, rhs: RecentActivityViewModel.Activity) -> Bool {
+            lhs.activity == rhs.activity
         }
     }
 }
