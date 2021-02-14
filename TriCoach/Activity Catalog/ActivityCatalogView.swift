@@ -62,7 +62,7 @@ struct ActivityCard : View {
             destination: ActivityDetailsView(activity: activity.viewModel),
             isActive: .init(
                 get: { activity.isSelected },
-                set: { activity.isSelected = $0 })
+                set: { $0 ? activity.select() : activity.deselect() })
         ) {
             HStack {
                 ActivityThumbnail(sport: activity.sport)

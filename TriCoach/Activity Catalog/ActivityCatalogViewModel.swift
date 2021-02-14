@@ -14,12 +14,12 @@ class ActivityCatalogViewModel : ObservableObject {
     private let measurementFormatter = MeasurementFormatter()
 
     private var settings: SettingsStore
-    private var activity: ActivityStore
+    private var activityStore: ActivityStore
     private var subscriptions = Set<AnyCancellable>()
     
     init(activity: ActivityStore, settings: SettingsStore) {
         self.settings = settings
-        self.activity = activity
+        self.activityStore = activity
         
         self.placeholder = [
             .init(title: "This Week",
@@ -34,7 +34,7 @@ class ActivityCatalogViewModel : ObservableObject {
                            date: Date()),
                        dateFormatter: DateFormatter(),
                        measurementFormatter: MeasurementFormatter(),
-                    activityStore: activity)
+                    isSelected: Just<Bool>(false).eraseToAnyPublisher())
                  })
         ]
 
@@ -57,7 +57,7 @@ class ActivityCatalogViewModel : ObservableObject {
             }
             .store(in: &subscriptions)
         
-        self.activity.$state
+        self.activityStore.$state
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: refresh)
             .store(in: &subscriptions)
@@ -72,12 +72,16 @@ class ActivityCatalogViewModel : ObservableObject {
                     Group(
                         title: categoryFormatter.string(from: item.date),
                         position: offset,
-                        content: item.activities.map {
+                        content: item.activities.map { activity in
                             .init(
-                                activity: $0,
+                                activity: activity,
                                 dateFormatter: activityDateFormatter,
                                 measurementFormatter: measurementFormatter,
-                                activityStore: activity)
+                                isSelected: self.activityStore.$selectedActivity
+                                    .map { $0 == activity }
+                                    .eraseToAnyPublisher(),
+                                select: { self.activityStore.select(activity) },
+                                deselect: { self.activityStore.deselect(activity) })
                         }.sorted())
                 }
         } ?? placeholder
@@ -86,7 +90,7 @@ class ActivityCatalogViewModel : ObservableObject {
     // MARK: - Intents
 
     func loadCatalog() {
-        activity.loadCatalog()
+        activityStore.loadCatalog()
     }
     
     // MARK: - Access to Model
@@ -117,9 +121,6 @@ class ActivityCatalogViewModel : ObservableObject {
         let activity: TriCoach.Activity
         private let dateFormatter: DateFormatter
         private let measurementFormatter: MeasurementFormatter
-        private var activityStore: ActivityStore
-
-        @Published private var _isSelected: Bool = false
         
         let id = UUID()
 
@@ -127,33 +128,27 @@ class ActivityCatalogViewModel : ObservableObject {
             activity: TriCoach.Activity,
             dateFormatter: DateFormatter,
             measurementFormatter: MeasurementFormatter,
-            activityStore: ActivityStore
+            isSelected: AnyPublisher<Bool, Never>,
+            select: @escaping () -> Void = {},
+            deselect: @escaping () -> Void = {}
         ) {
             self.activity = activity
             self.dateFormatter = dateFormatter
             self.measurementFormatter = measurementFormatter
-            self.activityStore = activityStore
-            
-            self.activityStore.$selectedActivity
-                .map { $0 == activity }
-                .assign(to: &$_isSelected)
+            self.select = select
+            self.deselect = deselect
+
+            isSelected.assign(to: &self.$isSelected)
         }
         
         // MARK: - Intents
-        
-        var isSelected: Bool {
-            get {
-                _isSelected
-            } set {
-                if newValue {
-                    activityStore.select(activity)
-                } else {
-                    activityStore.deselect(activity)
-                }
-            }
-        }
+
+        var select: () -> Void
+        var deselect: () -> Void
         
         // MARK: - Access to Model
+
+        @Published var isSelected: Bool = false
         
         var sport: TriCoach.Activity.Sport {
             activity.sport
