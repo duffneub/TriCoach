@@ -110,6 +110,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1729A63825D747CB00A16954 /* Activity Catalog */ = {
+			isa = PBXGroup;
+			children = (
+				17762E0D25C102FB00BE89BD /* ActivityCatalogView.swift */,
+				172EA16F25C2569B00A18196 /* ActivityCatalogViewModel.swift */,
+			);
+			path = "Activity Catalog";
+			sourceTree = "<group>";
+		};
 		172F3B2D25CA245B00B5F199 /* Test Doubles */ = {
 			isa = PBXGroup;
 			children = (
@@ -155,14 +164,12 @@
 				178F117825CC987D0047BC3F /* TriCoach.entitlements */,
 				17762E0B25C102FB00BE89BD /* TriCoachApp.swift */,
 				172EA16525C2534000A18196 /* PreviewData.swift */,
-				17762E0D25C102FB00BE89BD /* ActivityCatalogView.swift */,
-				172EA16F25C2569B00A18196 /* ActivityCatalogViewModel.swift */,
+				1729A63825D747CB00A16954 /* Activity Catalog */,
+				179CB64C25D2DDAC001D767C /* Activity Details */,
 				172DD1C325CDB928009E3A83 /* ActivityServiceRepository.swift */,
 				17FE2CE225D60048006E516D /* ActivityStore.swift */,
 				174B43B425D6DE0900FAC32F /* SettingsStore.swift */,
 				172EA17925C32B4300A18196 /* Activity.swift */,
-				1785C51925D44C890016B88D /* Tile.swift */,
-				179CB64C25D2DDAC001D767C /* Activity Details */,
 				17F3346425C9E4A600FF31C9 /* Utilities */,
 				17762E0F25C102FC00BE89BD /* Assets.xcassets */,
 				17762E1425C102FC00BE89BD /* Info.plist */,
@@ -223,6 +230,7 @@
 				17F3346525C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift */,
 				172F3B2825CA20A100B5F199 /* MeasurementFormatter+Sports.swift */,
 				172DD1BE25CDB8F5009E3A83 /* Color+TriCoach.swift */,
+				1785C51925D44C890016B88D /* Tile.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
