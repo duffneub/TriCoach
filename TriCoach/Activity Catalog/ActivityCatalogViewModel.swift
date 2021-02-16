@@ -95,10 +95,10 @@ class ActivityCatalogViewModel : ObservableObject {
     
     // MARK: - Access to Model
 
-    @Published var catalog: [Group<Activity>] = []
+    @Published var catalog: [Group<ActivityViewModel>] = []
     @Published var isLoading: Bool = false
     
-    var placeholder: [Group<Activity>]
+    var placeholder: [Group<ActivityViewModel>]
     
     // MARK: - Group
 
@@ -115,17 +115,17 @@ class ActivityCatalogViewModel : ObservableObject {
         }
     }
     
-    // MARK: - Activity
+    // MARK: - ActivityViewModel
 
-    class Activity : Identifiable, Comparable, ObservableObject {
-        let activity: TriCoach.Activity
+    class ActivityViewModel : Identifiable, Comparable, ObservableObject {
+        let activity: Activity
         private let dateFormatter: DateFormatter
         private let measurementFormatter: MeasurementFormatter
         
         let id = UUID()
 
         init(
-            activity: TriCoach.Activity,
+            activity: Activity,
             dateFormatter: DateFormatter,
             measurementFormatter: MeasurementFormatter,
             isSelected: AnyPublisher<Bool, Never>,
@@ -150,7 +150,7 @@ class ActivityCatalogViewModel : ObservableObject {
 
         @Published var isSelected: Bool = false
         
-        var sport: TriCoach.Activity.Sport {
+        var sport: Activity.Sport {
             activity.sport
         }
         
@@ -174,13 +174,13 @@ class ActivityCatalogViewModel : ObservableObject {
         
         // MARK: - Comparable
 
-        static func < (lhs: ActivityCatalogViewModel.Activity, rhs: ActivityCatalogViewModel.Activity) -> Bool {
+        static func < (lhs: ActivityCatalogViewModel.ActivityViewModel, rhs: ActivityCatalogViewModel.ActivityViewModel) -> Bool {
             lhs.activity.date > rhs.activity.date
         }
 
         // MARK: - Equatable
 
-        static func == (lhs: ActivityCatalogViewModel.Activity, rhs: ActivityCatalogViewModel.Activity) -> Bool {
+        static func == (lhs: ActivityCatalogViewModel.ActivityViewModel, rhs: ActivityCatalogViewModel.ActivityViewModel) -> Bool {
             lhs.activity == rhs.activity
         }
     }

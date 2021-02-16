@@ -10,60 +10,46 @@ import SwiftUI
 
 @main
 struct TriCoachApp: App {
-    private let config = AppConfiguration()
+    #if targetEnvironment(simulator)
+    @StateObject private var app = TriCoach(config: .simulator)
+    #else
+    @StateObject private var app = TriCoach(config: .production)
+    #endif
 
     var body: some Scene {
         WindowGroup {
-            TabView {
-                NavigationView {
-                    ActivityCatalogView()
-                }
-                .navigationViewStyle(StackNavigationViewStyle())
-                .tabItem {
-                    Image(systemName: "clock.arrow.circlepath")
-                    Text("Recent")
-                }
-                Color.red.tabItem {
-                    Image(systemName: "2.circle")
-                }
-                Color.red.tabItem {
-                    Image(systemName: "3.circle")
-                }
-                Color.red.tabItem {
-                    Image(systemName: "4.circle")
+            TabView(selection: $app.selectedSection) {
+                ForEach(TriCoach.Section.allCases, id: \.self) { section in
+                    SectionView(section)
+                        .tabItem {
+                            Image(systemName: app.selectedSection == section ? section.selectedImage : section.unselectedImage)
+                            Text(section.name)
+                        }
+
                 }
             }
-            .environmentObject(ActivityCatalogViewModel(activity: config.activityStore, settings: config.settingsStore))
+            .environmentObject(ActivityCatalogViewModel(activity: app.activityStore, settings: app.settingsStore)) // This is causing tab view to be slow, but will probably be better after refactor
         }
     }
 }
 
-#if IOS_SIMULATOR
+private struct SectionView : View {
+    private var section: TriCoach.Section
 
-private struct AppConfiguration {
-    let settingsStore: SettingsStore
-    let activityStore: ActivityStore
+    init(_ section: TriCoach.Section) {
+        self.section = section
+    }
 
-    init() {
-        settingsStore = SettingsStore()
-        activityStore = ActivityStore(
-            activityRepo: PreviewData.FakeActivityRepository(delay: 1),
-            calendar: settingsStore.$calendar.eraseToAnyPublisher())
+    var body: some View {
+        NavigationView {
+            switch section {
+            case .history:
+                ActivityCatalogView()
+            default:
+                Color.red
+            }
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+        .tag(section)
     }
 }
-
-#else
-
-private struct AppConfiguration {
-    let settingsStore: SettingsStore
-    let activityStore: ActivityStore
-
-    init() {
-        settingsStore = SettingsStore()
-        activityStore = ActivityStore(
-            activityRepo: ActivityServiceRepository(service: HKHealthStore()),
-            calendar: settingsStore.$calendar.eraseToAnyPublisher())
-    }
-}
-
-#endif

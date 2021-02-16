@@ -51,9 +51,9 @@ struct ActivityCatalogView : View {
 }
 
 struct ActivityCard : View {
-    @ObservedObject var activity: ActivityCatalogViewModel.Activity
+    @ObservedObject var activity: ActivityCatalogViewModel.ActivityViewModel
     
-    init(activity: ActivityCatalogViewModel.Activity) {
+    init(activity: ActivityCatalogViewModel.ActivityViewModel) {
         self.activity = activity
     }
 
