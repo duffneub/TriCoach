@@ -16,40 +16,65 @@ struct TriCoachApp: App {
     @StateObject private var app = TriCoach(config: .production)
     #endif
 
+    init() {
+        let backgroundColor = UIColor.systemGroupedBackground
+
+        let appearance = UIBarAppearance()
+        appearance.configureWithTransparentBackground()
+        appearance.backgroundColor = backgroundColor
+        UINavigationBar.appearance().scrollEdgeAppearance = .init(barAppearance: appearance)
+
+        UINavigationBar.appearance().standardAppearance.backgroundColor = backgroundColor
+        UIScrollView.appearance().backgroundColor = backgroundColor
+    }
+
     var body: some Scene {
         WindowGroup {
             TabView(selection: $app.selectedSection) {
                 ForEach(TriCoach.Section.allCases, id: \.self) { section in
-                    SectionView(section)
-                        .tabItem {
-                            Image(systemName: app.selectedSection == section ? section.selectedImage : section.unselectedImage)
-                            Text(section.name)
+                    Group {
+                        switch section {
+                        case .history:
+                            ActivityBrowser(app.activityStore)
+                        default:
+                            Color.red
                         }
+                    }
+                    .tag(section)
+                    .tabItem {
+                        Image(systemName: app.selectedSection == section ? section.selectedImage : section.unselectedImage)
+                        Text(section.name)
+                    }
 
                 }
             }
-            .environmentObject(ActivityCatalogViewModel(activity: app.activityStore, settings: app.settingsStore)) // This is causing tab view to be slow, but will probably be better after refactor
         }
     }
 }
 
-private struct SectionView : View {
-    private var section: TriCoach.Section
-
-    init(_ section: TriCoach.Section) {
-        self.section = section
-    }
+private struct AppTabView : View {
+    @ObservedObject var app: TriCoach
 
     var body: some View {
-        NavigationView {
-            switch section {
-            case .history:
-                ActivityCatalogView()
-            default:
-                Color.red
+        TabView(selection: $app.selectedSection) {
+            ForEach(TriCoach.Section.allCases, id: \.self) { section in
+                Group {
+                    switch section {
+                    case .history:
+                        ActivityBrowser(app.activityStore)
+                    default:
+                        Color.red
+                    }
+                }
+                .tag(section)
+                .tabItem {
+                    Image(systemName: app.selectedSection == section ?
+                            section.selectedImage :
+                            section.unselectedImage)
+                    Text(section.name)
+                }
+
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
-        .tag(section)
     }
 }

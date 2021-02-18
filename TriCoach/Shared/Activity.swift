@@ -10,7 +10,8 @@ import Foundation
 
 // MARK: - Activity
 
-struct Activity {
+struct Activity : Identifiable, Hashable {
+    let id = UUID()
     let sport: Sport
     let workout: String
     let duration: Measurement<UnitDuration>

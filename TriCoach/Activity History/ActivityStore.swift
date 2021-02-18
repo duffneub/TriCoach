@@ -9,7 +9,18 @@ import Combine
 import HealthKit
 import Foundation
 
-class ActivityStore {
+struct Section : Identifiable {
+    let date: Date
+    let activities: [Activity]
+
+    var id: Int {
+        var hasher = Hasher()
+        activities.forEach { hasher.combine($0.id) }
+        return hasher.finalize()
+    }
+}
+
+class ActivityStore : ObservableObject {
     typealias Group = (date: Date, activities: [Activity])
 
     private let grouping: Set<Calendar.Component> = [.yearForWeekOfYear, .weekOfYear]
@@ -19,7 +30,15 @@ class ActivityStore {
     private var activities: [Activity] = []
 
     @Published var state: State = .ready
-    @Published private(set) var selectedActivity: Activity?
+    @Published var selectedActivity: Activity?
+
+    var isLoading: Bool {
+        state.isLoading
+    }
+
+    var sections: [Section]? {
+        state.catalog.map { $0.map { Section(date: $0.date, activities: $0.activities) } }
+    }
 
     private var subscriptions = Set<AnyCancellable>()
     
@@ -41,6 +60,7 @@ class ActivityStore {
             .assertNoFailure()
             .handleEvents(receiveOutput: { self.activities = $0 })
             .map { _ in self.updateCatalog() }
+            .receive(on: DispatchQueue.main)
             .assign(to: &$state)
             
     }

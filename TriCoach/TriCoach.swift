@@ -12,8 +12,8 @@ import Foundation
 class TriCoach : ObservableObject {
     @Published var selectedSection: TriCoach.Section = .history
 
-    let settingsStore: SettingsStore
-    let activityStore: ActivityStore
+    @Published var settingsStore: SettingsStore
+    @Published var activityStore: ActivityStore!
 
     init(config: Configuration = .production) {
         settingsStore = SettingsStore()
