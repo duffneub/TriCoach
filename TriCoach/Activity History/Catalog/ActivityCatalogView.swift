@@ -74,15 +74,3 @@ private struct HeaderView : View {
     }
 }
 
-extension Activity.Sport {
-    var imageName: String {
-        switch self {
-        case .swim:
-            return "Swimming_Filled"
-        case .bike:
-            return "Cycling_Filled"
-        case .run:
-            return "Running_Filled"
-        }
-    }
-}

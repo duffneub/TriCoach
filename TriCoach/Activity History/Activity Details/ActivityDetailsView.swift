@@ -156,6 +156,6 @@ private struct MetricWidget : View {
 
 struct ActivityDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        ActivityDetailsView(PreviewData.recentActivities.first!)
+        ActivityDetailsView(PreviewData.activities.first!)
     }
 }

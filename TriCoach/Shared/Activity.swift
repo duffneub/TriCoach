@@ -20,10 +20,10 @@ struct Activity : Identifiable, Hashable {
 }
 
 extension Activity {
-    enum Sport : CaseIterable {
-        case swim
-        case bike
-        case run
+    enum Sport : String, CaseIterable {
+        case swim = "Swim"
+        case bike = "Bike"
+        case run = "Run"
     }
 }
 

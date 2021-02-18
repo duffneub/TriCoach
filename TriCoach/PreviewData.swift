@@ -8,8 +8,44 @@
 import Combine
 import Foundation
 
+class TestActivityStore : ActivityStore {
+    init() {
+        super.init(
+            activityRepo: TestActivityRepository(),
+            calendar: Just<Calendar>(.current).eraseToAnyPublisher())
+    }
+}
+
+// MARK: -
+
+fileprivate struct TestActivityRepository : ActivityRepository {
+    let delay: TimeInterval
+    let activities: [Activity]
+
+    init(delay: TimeInterval = 0) {
+        self.delay = delay
+
+        self.activities = (0..<16).map {
+            Activity(sport: Activity.Sport.allCases[$0 % 3],
+                  workout: "\(Activity.Sport.allCases[$0 % 3])",
+                  duration: .init(value: Double(Int.random(in: 30..<120)), unit: .minutes),
+                  distance: .init(value: Double(Int.random(in: 1..<15)), unit: .miles),
+                  date: Calendar.current.date(byAdding: .day, value: -1 * $0, to: .init())!)
+        }
+    }
+
+    func getAll() -> AnyPublisher<[Activity], Error> {
+        Future { promise in
+            DispatchQueue.global().asyncAfter(deadline: .now() + delay) {
+                promise(.success(PreviewData.activities))
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+}
+
 struct PreviewData {
-    static let recentActivities: [Activity] = [
+    static let activities: [Activity] = [
         .init(sport: .run,
               workout: "Recovery",
               duration: .init(value: 49, unit: .minutes),
@@ -102,7 +138,7 @@ struct PreviewData {
         func getAll() -> AnyPublisher<[Activity], Error> {
             Future { promise in
                 DispatchQueue.global().asyncAfter(deadline: .now() + delay) {
-                    promise(.success(PreviewData.recentActivities))
+                    promise(.success(PreviewData.activities))
                 }
             }
             .eraseToAnyPublisher()

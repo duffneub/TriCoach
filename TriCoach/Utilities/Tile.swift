@@ -53,6 +53,14 @@ private struct TileView <Content : View> : View {
 
 extension Color {
     fileprivate static var tileBackground: Color {
-        .white
+        Color(.tileBackground)
+    }
+}
+
+extension UIColor {
+    fileprivate static var tileBackground: UIColor {
+        .init { traits in
+            traits.userInterfaceStyle == .dark ? UIColor.secondarySystemBackground : .white
+        }
     }
 }

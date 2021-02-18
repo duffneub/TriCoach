@@ -7,9 +7,6 @@
 
 import SwiftUI
 
-// TODO: Break catalog view into seperate file
-// TODO: Break details view into seperate file
-
 // MARK - ActivityBrowser
 
 struct ActivityBrowser : View {
@@ -56,5 +53,16 @@ struct NewActivityDetailsView : View {
 
     var body: some View {
         EmptyView()
+    }
+}
+
+// MARK: - Previews
+
+struct ActivityBrowser_Previews : PreviewProvider {
+    static var previews: some View {
+        ForEach(ColorScheme.allCases, id: \.self) {
+            ActivityBrowser(TestActivityStore()).preferredColorScheme($0)
+        }
+        .previewDevice(PreviewDevice(rawValue: "iPhone 12 mini"))
     }
 }
