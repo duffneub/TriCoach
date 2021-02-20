@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1718D03E25DC3B47005F919A /* TriCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718D03D25DC3B47005F919A /* TriCoach.swift */; };
+		172BC67E25E1CBCB00397448 /* LegacyMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172BC67D25E1CBCB00397448 /* LegacyMap.swift */; };
 		172DD1BF25CDB8F5009E3A83 /* Color+TriCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172DD1BE25CDB8F5009E3A83 /* Color+TriCoach.swift */; };
 		172DD1C425CDB928009E3A83 /* ActivityServiceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172DD1C325CDB928009E3A83 /* ActivityServiceRepository.swift */; };
 		172EA16625C2534000A18196 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA16525C2534000A18196 /* PreviewData.swift */; };
@@ -55,6 +56,7 @@
 
 /* Begin PBXFileReference section */
 		1718D03D25DC3B47005F919A /* TriCoach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriCoach.swift; sourceTree = "<group>"; };
+		172BC67D25E1CBCB00397448 /* LegacyMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyMap.swift; sourceTree = "<group>"; };
 		172DD1BE25CDB8F5009E3A83 /* Color+TriCoach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+TriCoach.swift"; sourceTree = "<group>"; };
 		172DD1C325CDB928009E3A83 /* ActivityServiceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityServiceRepository.swift; sourceTree = "<group>"; };
 		172EA16525C2534000A18196 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
@@ -264,6 +266,7 @@
 				172DD1BE25CDB8F5009E3A83 /* Color+TriCoach.swift */,
 				1785C51925D44C890016B88D /* Tile.swift */,
 				1749790B25DD75FF0060D612 /* FlatList.swift */,
+				172BC67D25E1CBCB00397448 /* LegacyMap.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -398,6 +401,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1718D03E25DC3B47005F919A /* TriCoach.swift in Sources */,
+				172BC67E25E1CBCB00397448 /* LegacyMap.swift in Sources */,
 				172EA17A25C32B4300A18196 /* Activity.swift in Sources */,
 				1749790C25DD75FF0060D612 /* FlatList.swift in Sources */,
 				17F3346625C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift in Sources */,
