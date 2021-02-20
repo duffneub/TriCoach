@@ -22,6 +22,10 @@ struct ActivityDetailsView: View {
                 ActivityDetailsHeader(image: image, name: name, date: date, time: time)
                     .padding(.bottom)
 
+                LegacyMap()
+                    .aspectRatio(1.5, contentMode: .fit)
+                    .tile(padding: 0)
+
                 LazyVGrid(columns: columns) {
                     MetricWidget(
                         image: "timer",
