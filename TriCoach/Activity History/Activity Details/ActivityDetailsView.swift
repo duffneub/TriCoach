@@ -12,6 +12,8 @@ struct ActivityDetailsView: View {
     private let measurementFormatter = MeasurementFormatter()
     private var activity: Activity
 
+    @EnvironmentObject private var store: ActivityStore
+
     init(_ activity: Activity) {
         self.activity = activity
     }
@@ -22,9 +24,12 @@ struct ActivityDetailsView: View {
                 ActivityDetailsHeader(image: image, name: name, date: date, time: time)
                     .padding(.bottom)
 
-                LegacyMap()
+                LegacyMap(route: store.route(of: activity))
                     .aspectRatio(1.5, contentMode: .fit)
                     .tile(padding: 0)
+                    .onAppear {
+                        store.loadRoute(of: activity)
+                    }
 
                 LazyVGrid(columns: columns) {
                     MetricWidget(

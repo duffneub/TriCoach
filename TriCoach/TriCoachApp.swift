@@ -36,6 +36,7 @@ struct TriCoachApp: App {
                         switch section {
                         case .history:
                             ActivityBrowser(app.activityStore)
+                                .environmentObject(app.activityStore)
                         default:
                             Color.red
                         }

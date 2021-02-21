@@ -9,7 +9,7 @@ import MapKit
 import SwiftUI
 
 struct LegacyMap : UIViewRepresentable {
-    private var route: [CLLocationCoordinate2D] = [.texasCapitol, .utTower, .dkrStadium, .sixthAndSoCo]
+    let route: [CLLocationCoordinate2D]?
 
     func makeCoordinator() -> Coordinator {
         .init()
@@ -24,6 +24,12 @@ struct LegacyMap : UIViewRepresentable {
     }
 
     func updateUIView(_ map: MKMapView, context: Context) {
+        map.removeOverlays(map.overlays)
+
+        guard let route = route else {
+            return
+        }
+
         let routeOverlay = MKPolyline(coordinates: route, count: route.count)
 
         map.addOverlay(routeOverlay)
@@ -51,7 +57,7 @@ struct LegacyMap : UIViewRepresentable {
 struct LegacyMap_Previews : PreviewProvider {
     static var previews: some View {
         ForEach(ColorScheme.allCases, id: \.self) {
-            LegacyMap().preferredColorScheme($0)
+            LegacyMap(route: [.texasCapitol, .utTower, .dkrStadium, .sixthAndSoCo]).preferredColorScheme($0)
         }
         .previewDevice(PreviewDevice(rawValue: "iPhone 12 mini"))
     }

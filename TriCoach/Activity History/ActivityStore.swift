@@ -8,6 +8,7 @@
 import Combine
 import HealthKit
 import Foundation
+import CoreLocation
 
 struct Section : Identifiable {
     let date: Date
@@ -28,6 +29,8 @@ class ActivityStore : ObservableObject {
 
     private var calendar: Calendar = .current
     private var activities: [Activity] = []
+
+    @Published var routes: [Activity.ID: AsyncState<[CLLocationCoordinate2D]?>] = [:]
 
     @Published var state: State = .ready
     @Published var selectedActivity: Activity?
@@ -63,6 +66,29 @@ class ActivityStore : ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$state)
             
+    }
+
+    func route(of activity: Activity) -> [CLLocationCoordinate2D]? {
+        routes[activity.id]?.value ?? nil
+    }
+
+    func loadRoute(of activity: Activity) {
+        guard routes[activity.id] == nil else {
+            return
+        }
+
+        routes[activity.id] = .loading
+
+        activityRepo.loadRoute(of: activity)
+            .assertNoFailure()
+            .map { AsyncState.success($0) }
+            .map {
+                var newRoutes = self.routes
+                newRoutes[activity.id] = $0
+                return newRoutes
+            }
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$routes)
     }
 
     private func updateCatalog() -> State {
@@ -108,5 +134,29 @@ class ActivityStore : ObservableObject {
 
             return nil
         }
+    }
+}
+
+// MARK: - State
+
+enum AsyncState<T> {
+    case ready
+    case loading
+    case success(T)
+
+    var isLoading: Bool {
+        if case .loading = self {
+            return true
+        }
+
+        return false
+    }
+
+    var value: T? {
+        if case let .success(value) = self {
+            return value
+        }
+
+        return nil
     }
 }

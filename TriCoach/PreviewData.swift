@@ -18,6 +18,8 @@ class TestActivityStore : ActivityStore {
 
 // MARK: -
 
+import CoreLocation
+
 fileprivate struct TestActivityRepository : ActivityRepository {
     let delay: TimeInterval
     let activities: [Activity]
@@ -41,6 +43,10 @@ fileprivate struct TestActivityRepository : ActivityRepository {
             }
         }
         .eraseToAnyPublisher()
+    }
+
+    func loadRoute(of activity: Activity) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error> {
+        Just<[CLLocationCoordinate2D]?>(nil).setFailureType(to: Error.self).eraseToAnyPublisher()
     }
 }
 
@@ -142,6 +148,10 @@ struct PreviewData {
                 }
             }
             .eraseToAnyPublisher()
+        }
+
+        func loadRoute(of activity: Activity) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error> {
+            Just<[CLLocationCoordinate2D]?>(nil).setFailureType(to: Error.self).eraseToAnyPublisher()
         }
     }
 }

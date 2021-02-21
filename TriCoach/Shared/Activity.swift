@@ -51,6 +51,9 @@ extension Activity : Comparable {
 
 // MARK: - ActivityRepository
 
+import CoreLocation
+
 protocol ActivityRepository {
     func getAll() -> AnyPublisher<[Activity], Error>
+    func loadRoute(of activity: Activity) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error>
 }
