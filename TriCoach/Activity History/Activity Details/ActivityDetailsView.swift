@@ -17,19 +17,17 @@ struct ActivityDetailsView: View {
     init(_ activity: Activity) {
         self.activity = activity
     }
-    
+
     var body: some View {
         ScrollView {
             VStack {
                 ActivityDetailsHeader(image: image, name: name, date: date, time: time)
                     .padding(.bottom)
 
-                LegacyMap(route: store.route(of: activity))
+                AsyncMap(store.route(of: activity), loadRoute: { store.loadRoute(of: activity) })
+                    .allowsHitTesting(false)
                     .aspectRatio(1.5, contentMode: .fit)
                     .tile(padding: 0)
-                    .onAppear {
-                        store.loadRoute(of: activity)
-                    }
 
                 LazyVGrid(columns: columns) {
                     MetricWidget(
@@ -117,6 +115,40 @@ private struct ActivityDetailsHeader : View {
 
     private let imagePadding: CGFloat = 14
     private let imageHeight: CGFloat = 50
+}
+
+// MARK: - AsyncMap
+
+import CoreLocation
+
+private struct AsyncMap : View {
+    private let state: AsyncState<[CLLocationCoordinate2D]?>
+    private let loadRoute: () -> Void
+
+    init(_ state: AsyncState<[CLLocationCoordinate2D]?>, loadRoute: @escaping () -> Void) {
+        self.state = state
+        self.loadRoute = loadRoute
+    }
+
+    var body: some View {
+        Group {
+            switch state {
+            case .ready:
+                Color.clear
+                    .onAppear(perform: loadRoute)
+            case .loading:
+                ProgressView("Loading…")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            case let .success(route):
+                if route != nil {
+                    LegacyMap(route: route)
+                } else {
+                    Text("Route Unavailable")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            }
+        }
+    }
 }
 
 // MARK: - MetricWidget

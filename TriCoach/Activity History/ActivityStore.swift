@@ -68,8 +68,8 @@ class ActivityStore : ObservableObject {
             
     }
 
-    func route(of activity: Activity) -> [CLLocationCoordinate2D]? {
-        routes[activity.id]?.value ?? nil
+    func route(of activity: Activity) -> AsyncState<[CLLocationCoordinate2D]?> {
+        routes[activity.id, default: .ready]
     }
 
     func loadRoute(of activity: Activity) {
