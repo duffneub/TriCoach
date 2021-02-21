@@ -11,12 +11,28 @@ import Foundation
 // MARK: - Activity
 
 struct Activity : Identifiable, Hashable {
-    let id = UUID()
+    let id: UUID
     let sport: Sport
     let workout: String
     let duration: Measurement<UnitDuration>
     let distance: Measurement<UnitLength>
     let date: Date
+
+    init(
+        id: UUID = UUID(),
+        sport: Sport,
+        workout: String,
+        duration: Measurement<UnitDuration>,
+        distance: Measurement<UnitLength>,
+        date: Date
+    ) {
+        self.id = id
+        self.sport = sport
+        self.workout = workout
+        self.duration = duration
+        self.distance = distance
+        self.date = date
+    }
 }
 
 extension Activity {
