@@ -47,6 +47,18 @@ class ActivityServiceRepository : ActivityRepository {
         .flatMap { self.service.getRoute(for: activity.id) }
         .eraseToAnyPublisher()
     }
+
+    func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Swift.Error> {
+        Result {
+            guard service.isAvailable else {
+                throw Error.unavailable
+            }
+        }
+        .publisher
+        .flatMap(self.service.requestAuthorization)
+        .flatMap { self.service.loadHeartRate(of: activity) }
+        .eraseToAnyPublisher()
+    }
 }
 
 // MARK: - ActivityService
@@ -56,6 +68,7 @@ protocol ActivityService {
     func requestAuthorization() -> AnyPublisher<Void, Error>
     func getActivities() -> AnyPublisher<[Activity], Error>
     func getRoute(for activity: UUID) -> AnyPublisher<[CLLocationCoordinate2D]?, Error>
+    func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Error>
 }
 
 // MARK: - HKHealthStore + ActivityService
@@ -67,7 +80,13 @@ extension HKHealthStore : ActivityService {
     
     func requestAuthorization() -> AnyPublisher<Void, Error> {
         Future { promise in
-            self.requestAuthorization(toShare: nil, read: [HKWorkoutType.workoutType()]) { _, error in
+            self.requestAuthorization(
+                toShare: nil,
+                read: [
+                    HKWorkoutType.workoutType(),
+                    HKSeriesType.workoutRoute(),
+                    HKQuantityType.quantityType(forIdentifier: .heartRate)!
+                ]) { _, error in
                 promise(error.map { .failure($0) } ?? .success(()))
             }
         }.eraseToAnyPublisher()
@@ -123,6 +142,36 @@ extension HKHealthStore : ActivityService {
         .eraseToAnyPublisher()
     }
 
+    func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Error> {
+        fetchSamples(
+            sampleType: .workoutType(),
+            predicate: HKQuery.predicateForObject(with: activity.id),
+            limit: 1,
+            sortDescriptors: nil
+        )
+        .map { ($0 as! [HKWorkout]).first! }
+        .flatMap(self.beatsPerMinute)
+        .eraseToAnyPublisher()
+    }
+
+    private func beatsPerMinute(_ workout: HKWorkout) -> AnyPublisher<[Double], Error> {
+        var intervalComps = DateComponents()
+        intervalComps.second = 1
+
+        return fetchStatisticsCollection(
+            quantityType: HKQuantityType.quantityType(forIdentifier: .heartRate)!,
+            quantitySamplePredicate: HKQuery.predicateForObjects(from: workout),
+            options: HKStatisticsOptions.discreteAverage,
+            anchorDate: Date(),
+            intervalComponents: intervalComps
+        )
+        .map { $0.statistics().map {
+            $0.averageQuantity()!.doubleValue(for: HKUnit.count().unitDivided(by: .minute()))
+        } }
+        .eraseToAnyPublisher()
+
+    }
+
     private func fetchSamples(
         sampleType: HKSampleType,
         predicate: NSPredicate?,
@@ -141,6 +190,32 @@ extension HKHealthStore : ActivityService {
                     return
                 }
                 promise(.success(samples!))
+            }
+
+            self.execute(query)
+        }.eraseToAnyPublisher()
+    }
+
+    private func fetchStatisticsCollection(
+        quantityType: HKQuantityType,
+        quantitySamplePredicate: NSPredicate?,
+        options: HKStatisticsOptions,
+        anchorDate: Date,
+        intervalComponents: DateComponents
+    ) -> AnyPublisher<HKStatisticsCollection, Error> {
+        Future { promise in
+            let query = HKStatisticsCollectionQuery(
+                quantityType: quantityType,
+                quantitySamplePredicate: quantitySamplePredicate,
+                options: options,
+                anchorDate: anchorDate,
+                intervalComponents: intervalComponents)
+            query.initialResultsHandler = { _, result, error in
+                guard error == nil else {
+                    promise(.failure(error!))
+                    return
+                }
+                promise(.success(result!))
             }
 
             self.execute(query)

@@ -61,11 +61,20 @@ struct ActivityDetailsView: View {
                         unit: "elapsed")
 
                     DistanceWidget(activity.distance)
+
+                    MetricWidget(
+                        image: "heart.fill",
+                        name: "Avg. Heart Rate",
+                        value: "\(store.heartRate(of: activity).value.map { Int($0.reduce(0, +) / Double($0.count)) } ?? 0)",
+                        unit: "Beats Per Minute")
                 }
 
                 Spacer()
             }
             .padding([.top, .leading, .trailing])
+            .onAppear {
+                store.loadHeartRate(of: activity)
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
     }

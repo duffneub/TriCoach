@@ -56,4 +56,5 @@ import CoreLocation
 protocol ActivityRepository {
     func getAll() -> AnyPublisher<[Activity], Error>
     func loadRoute(of activity: Activity) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error>
+    func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Swift.Error>
 }

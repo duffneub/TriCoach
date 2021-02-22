@@ -31,6 +31,7 @@ class ActivityStore : ObservableObject {
     private var activities: [Activity] = []
 
     @Published var routes: [Activity.ID: AsyncState<[CLLocationCoordinate2D]?>] = [:]
+    @Published var heartRate: [Activity.ID: AsyncState<[Double]>] = [:]
 
     @Published var state: State = .ready
     @Published var selectedActivity: Activity?
@@ -89,6 +90,34 @@ class ActivityStore : ObservableObject {
             }
             .receive(on: DispatchQueue.main)
             .assign(to: &$routes)
+    }
+
+    func heartRate(of activity: Activity) -> AsyncState<[Double]> {
+        heartRate[activity.id, default: .ready]
+    }
+
+    func loadHeartRate(of activity: Activity) {
+        guard heartRate[activity.id] == nil else {
+            return
+        }
+
+        heartRate[activity.id] = .loading
+
+        activityRepo.loadHeartRate(of: activity)
+            .assertNoFailure()
+            .handleEvents(receiveOutput: { samples in
+                samples.forEach {
+                    print($0)
+                }
+            })
+            .map { AsyncState.success($0) }
+            .map {
+                var new = self.heartRate
+                new[activity.id] = $0
+                return new
+            }
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$heartRate)
     }
 
     private func updateCatalog() -> State {

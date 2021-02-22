@@ -48,6 +48,10 @@ fileprivate struct TestActivityRepository : ActivityRepository {
     func loadRoute(of activity: Activity) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error> {
         Just<[CLLocationCoordinate2D]?>(nil).setFailureType(to: Error.self).eraseToAnyPublisher()
     }
+
+    func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Swift.Error> {
+        Just<[Double]>([]).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
+    }
 }
 
 struct PreviewData {
@@ -152,6 +156,10 @@ struct PreviewData {
 
         func loadRoute(of activity: Activity) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error> {
             Just<[CLLocationCoordinate2D]?>(nil).setFailureType(to: Error.self).eraseToAnyPublisher()
+        }
+
+        func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Swift.Error> {
+            Just<[Double]>([]).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
         }
     }
 }
