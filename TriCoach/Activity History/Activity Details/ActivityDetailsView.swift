@@ -7,6 +7,27 @@
 
 import SwiftUI
 
+struct DistanceWidget : View {
+    private let numberFormatter = NumberFormatter()
+    private let measurementFormatter = MeasurementFormatter()
+    private let distance: Measurement<UnitLength>
+
+    init(_ distance: Measurement<UnitLength>) {
+        self.distance = distance
+
+        numberFormatter.maximumFractionDigits = 1
+        measurementFormatter.unitStyle = .long
+    }
+
+    var body: some View {
+        MetricWidget(
+            image: "location.circle.fill",
+            name: "Distance",
+            value: numberFormatter.string(from: .init(value: distance.value))!,
+            unit: measurementFormatter.string(from: distance.unit))
+    }
+}
+
 struct ActivityDetailsView: View {
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
     private let measurementFormatter = MeasurementFormatter()
@@ -39,11 +60,7 @@ struct ActivityDetailsView: View {
                         value: "\(measurementFormatter.hoursAndMinutes(from: activity.duration))",
                         unit: "elapsed")
 
-                    MetricWidget(
-                        image: "location.circle.fill",
-                        name: "Distance",
-                        value: "\(activity.distance.converted(to: .miles).value.rounded())",
-                        unit: "Miles")
+                    DistanceWidget(activity.distance)
                 }
 
                 Spacer()
