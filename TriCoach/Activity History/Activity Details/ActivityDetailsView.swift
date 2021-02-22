@@ -16,6 +16,9 @@ struct ActivityDetailsView: View {
 
     init(_ activity: Activity) {
         self.activity = activity
+
+        measurementFormatter.unitStyle = .short
+        measurementFormatter.numberFormatter.maximumFractionDigits = 0
     }
 
     var body: some View {
@@ -33,8 +36,8 @@ struct ActivityDetailsView: View {
                     MetricWidget(
                         image: "timer",
                         name: "Duration",
-                        value: "\(activity.duration.converted(to: .minutes).value.rounded())",
-                        unit: "minutes")
+                        value: "\(measurementFormatter.hoursAndMinutes(from: activity.duration))",
+                        unit: "elapsed")
 
                     MetricWidget(
                         image: "location.circle.fill",

@@ -9,16 +9,6 @@ import Foundation
 
 extension MeasurementFormatter {
     func hoursAndMinutes(from duration: Measurement<UnitDuration>) -> String {
-        let unitStyleCache = unitStyle
-        let maximumFractionDigitsCache = numberFormatter.maximumFractionDigits
-        defer {
-            unitStyle = unitStyleCache
-            numberFormatter.maximumFractionDigits = maximumFractionDigitsCache
-        }
-        
-        unitStyle = .medium
-        numberFormatter.maximumFractionDigits = 1
-        
         let total = duration.converted(to: .hours)
         let hours = Measurement<UnitDuration>(value: total.value.rounded(.towardZero), unit: .hours)
         let minutes = (total - hours).converted(to: .minutes)

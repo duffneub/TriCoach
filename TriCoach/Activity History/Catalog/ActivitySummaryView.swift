@@ -16,6 +16,9 @@ struct ActivitySummaryView : View {
 
     init(_ activity: Activity) {
         self.activity = activity
+
+        measurementFormatter.unitStyle = .medium
+        measurementFormatter.numberFormatter.maximumFractionDigits = 1
     }
 
     var body: some View {
