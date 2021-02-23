@@ -24,7 +24,7 @@ class ActivityServiceRepository : ActivityRepository {
 
     private var subscriptions = Set<AnyCancellable>()
     
-    func getAll() -> AnyPublisher<[Activity], Swift.Error> {
+    func getAll() -> AnyPublisher<[Activity.Summary], Swift.Error> {
         Result {
             guard service.isAvailable else {
                 throw Error.unavailable
@@ -36,7 +36,7 @@ class ActivityServiceRepository : ActivityRepository {
         .eraseToAnyPublisher()
     }
 
-    func loadRoute(of activity: Activity) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error> {
+    func loadRoute(of activity: Activity.Summary) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error> {
         Result {
             guard service.isAvailable else {
                 throw Error.unavailable
@@ -48,7 +48,7 @@ class ActivityServiceRepository : ActivityRepository {
         .eraseToAnyPublisher()
     }
 
-    func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Swift.Error> {
+    func loadHeartRate(of activity: Activity.Summary) -> AnyPublisher<[Double], Swift.Error> {
         Result {
             guard service.isAvailable else {
                 throw Error.unavailable
@@ -66,9 +66,9 @@ class ActivityServiceRepository : ActivityRepository {
 protocol ActivityService {
     var isAvailable: Bool { get }
     func requestAuthorization() -> AnyPublisher<Void, Error>
-    func getActivities() -> AnyPublisher<[Activity], Error>
+    func getActivities() -> AnyPublisher<[Activity.Summary], Error>
     func getRoute(for activity: UUID) -> AnyPublisher<[CLLocationCoordinate2D]?, Error>
-    func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Error>
+    func loadHeartRate(of activity: Activity.Summary) -> AnyPublisher<[Double], Error>
 }
 
 // MARK: - HKHealthStore + ActivityService
@@ -92,11 +92,11 @@ extension HKHealthStore : ActivityService {
         }.eraseToAnyPublisher()
     }
 
-    func getActivities() -> AnyPublisher<[Activity], Error> {
+    func getActivities() -> AnyPublisher<[Activity.Summary], Error> {
         Future { promise in
             let query = HKSampleQuery(
                 sampleType: .workoutType(),
-                predicate: NSCompoundPredicate(orPredicateWithSubpredicates: Activity.Sport.allCases.map {
+                predicate: NSCompoundPredicate(orPredicateWithSubpredicates: Activity.Summary.Sport.allCases.map {
                     HKQuery.predicateForWorkouts(with: .init($0))
                 }),
                 limit: HKObjectQueryNoLimit,
@@ -142,7 +142,7 @@ extension HKHealthStore : ActivityService {
         .eraseToAnyPublisher()
     }
 
-    func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Error> {
+    func loadHeartRate(of activity: Activity.Summary) -> AnyPublisher<[Double], Error> {
         fetchSamples(
             sampleType: .workoutType(),
             predicate: HKQuery.predicateForObject(with: activity.id),
@@ -244,7 +244,7 @@ extension HKHealthStore : ActivityService {
 // MARK: - HKWorkout +
 
 extension HKWorkout {
-    func makeActivity() -> Activity? {
+    func makeActivity() -> Activity.Summary? {
         guard let sport = workoutActivityType.sport,
               let distance = totalDistance?.doubleValue(for: .mile())
         else {
@@ -283,7 +283,7 @@ extension HKWorkout {
 // MARK: - HKWorkoutActivityType +
 
 extension HKWorkoutActivityType {
-    init(_ sport: Activity.Sport) {
+    init(_ sport: Activity.Summary.Sport) {
         switch sport {
         case .swim:
             self = .swimming
@@ -294,7 +294,7 @@ extension HKWorkoutActivityType {
         }
     }
     
-    var sport: Activity.Sport? {
+    var sport: Activity.Summary.Sport? {
         switch self {
         case .swimming:
             return .swim

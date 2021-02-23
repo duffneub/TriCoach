@@ -22,7 +22,7 @@ class HealthKitActivityServiceTests : XCTestCase {
         let date = Date()
         
         XCTAssertEqual(
-            Activity(
+            Activity.Summary(
                 sport: .swim,
                 workout: "Pool Swim",
                 duration: .init(value: 100, unit: .seconds),
@@ -39,7 +39,7 @@ class HealthKitActivityServiceTests : XCTestCase {
         )
         
         XCTAssertEqual(
-            Activity(
+            Activity.Summary(
                 sport: .swim,
                 workout: "Pool Swim",
                 duration: .init(value: 100, unit: .seconds),
@@ -58,7 +58,7 @@ class HealthKitActivityServiceTests : XCTestCase {
         )
         
         XCTAssertEqual(
-            Activity(
+            Activity.Summary(
                 sport: .swim,
                 workout: "Open Water Swim",
                 duration: .init(value: 100, unit: .seconds),
@@ -77,7 +77,7 @@ class HealthKitActivityServiceTests : XCTestCase {
         )
         
         XCTAssertEqual(
-            Activity(
+            Activity.Summary(
                 sport: .bike,
                 workout: "Outdoor Ride",
                 duration: .init(value: 100, unit: .minutes),
@@ -94,7 +94,7 @@ class HealthKitActivityServiceTests : XCTestCase {
         )
         
         XCTAssertEqual(
-            Activity(
+            Activity.Summary(
                 sport: .bike,
                 workout: "Outdoor Ride",
                 duration: .init(value: 100, unit: .minutes),
@@ -113,7 +113,7 @@ class HealthKitActivityServiceTests : XCTestCase {
         )
         
         XCTAssertEqual(
-            Activity(
+            Activity.Summary(
                 sport: .bike,
                 workout: "Indoor Ride",
                 duration: .init(value: 100, unit: .minutes),
@@ -132,7 +132,7 @@ class HealthKitActivityServiceTests : XCTestCase {
         )
         
         XCTAssertEqual(
-            Activity(
+            Activity.Summary(
                 sport: .run,
                 workout: "Outdoor Run",
                 duration: .init(value: 100, unit: .hours),
@@ -149,7 +149,7 @@ class HealthKitActivityServiceTests : XCTestCase {
         )
         
         XCTAssertEqual(
-            Activity(
+            Activity.Summary(
                 sport: .run,
                 workout: "Outdoor Run",
                 duration: .init(value: 100, unit: .hours),
@@ -168,7 +168,7 @@ class HealthKitActivityServiceTests : XCTestCase {
         )
         
         XCTAssertEqual(
-            Activity(
+            Activity.Summary(
                 sport: .run,
                 workout: "Indoor Run",
                 duration: .init(value: 100, unit: .hours),

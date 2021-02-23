@@ -31,11 +31,11 @@ struct DistanceWidget : View {
 struct ActivityDetailsView: View {
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
     private let measurementFormatter = MeasurementFormatter()
-    private var activity: Activity
+    private var activity: Activity.Summary
 
     @EnvironmentObject private var activityCatalog: ActivityCatalog
 
-    init(_ activity: Activity) {
+    init(_ activity: Activity.Summary) {
         self.activity = activity
 
         measurementFormatter.unitStyle = .short

@@ -12,9 +12,9 @@ import SwiftUI
 struct ActivitySummaryView : View {
     private let dateFormatter = GranularRelativeDateFormatter(granularity: .day)
     private let measurementFormatter = MeasurementFormatter()
-    private var activity: Activity
+    private var activity: Activity.Summary
 
-    init(_ activity: Activity) {
+    init(_ activity: Activity.Summary) {
         self.activity = activity
 
         measurementFormatter.unitStyle = .medium

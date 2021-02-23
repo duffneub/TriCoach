@@ -11,8 +11,8 @@ import Foundation
 @testable import TriCoach
 
 class MockActivityRepository : ActivityRepository {
-    private var activities: [Activity] = []
-    private var subject = PassthroughSubject<[Activity], Error>()
+    private var activities: [Activity.Summary] = []
+    private var subject = PassthroughSubject<[Activity.Summary], Error>()
     
     var holdResponse = false {
         didSet {
@@ -23,7 +23,7 @@ class MockActivityRepository : ActivityRepository {
         }
     }
     
-    func getAll() -> AnyPublisher<[Activity], Error> {
+    func getAll() -> AnyPublisher<[Activity.Summary], Error> {
         if !holdResponse {
             return Just(activities)
                 .setFailureType(to: Error.self)
@@ -33,19 +33,19 @@ class MockActivityRepository : ActivityRepository {
         }
     }
 
-    func loadRoute(of activity: Activity) -> AnyPublisher<[CLLocationCoordinate2D]?, Error> {
+    func loadRoute(of activity: Activity.Summary) -> AnyPublisher<[CLLocationCoordinate2D]?, Error> {
         Just<[CLLocationCoordinate2D]?>(nil).setFailureType(to: Error.self).eraseToAnyPublisher()
     }
 
-    func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Error> {
+    func loadHeartRate(of activity: Activity.Summary) -> AnyPublisher<[Double], Error> {
         Just<[Double]>([]).setFailureType(to: Error.self).eraseToAnyPublisher()
     }
     
-    func add(_ activity: Activity) {
+    func add(_ activity: Activity.Summary) {
         add([activity])
     }
     
-    func add(_ activities: [Activity]) {
+    func add(_ activities: [Activity.Summary]) {
         self.activities.append(contentsOf: activities)
     }
 }

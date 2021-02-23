@@ -22,21 +22,21 @@ import CoreLocation
 
 fileprivate struct TestActivityRepository : ActivityRepository {
     let delay: TimeInterval
-    let activities: [Activity]
+    let activities: [Activity.Summary]
 
     init(delay: TimeInterval = 0) {
         self.delay = delay
 
         self.activities = (0..<16).map {
-            Activity(sport: Activity.Sport.allCases[$0 % 3],
-                  workout: "\(Activity.Sport.allCases[$0 % 3])",
+            Activity.Summary(sport: Activity.Summary.Sport.allCases[$0 % 3],
+                  workout: "\(Activity.Summary.Sport.allCases[$0 % 3])",
                   duration: .init(value: Double(Int.random(in: 30..<120)), unit: .minutes),
                   distance: .init(value: Double(Int.random(in: 1..<15)), unit: .miles),
                   date: Calendar.current.date(byAdding: .day, value: -1 * $0, to: .init())!)
         }
     }
 
-    func getAll() -> AnyPublisher<[Activity], Error> {
+    func getAll() -> AnyPublisher<[Activity.Summary], Error> {
         Future { promise in
             DispatchQueue.global().asyncAfter(deadline: .now() + delay) {
                 promise(.success(PreviewData.activities))
@@ -45,17 +45,17 @@ fileprivate struct TestActivityRepository : ActivityRepository {
         .eraseToAnyPublisher()
     }
 
-    func loadRoute(of activity: Activity) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error> {
+    func loadRoute(of activity: Activity.Summary) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error> {
         Just<[CLLocationCoordinate2D]?>(nil).setFailureType(to: Error.self).eraseToAnyPublisher()
     }
 
-    func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Swift.Error> {
+    func loadHeartRate(of activity: Activity.Summary) -> AnyPublisher<[Double], Swift.Error> {
         Just<[Double]>([]).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
     }
 }
 
 struct PreviewData {
-    static let activities: [Activity] = [
+    static let activities: [Activity.Summary] = [
         .init(sport: .run,
               workout: "Recovery",
               duration: .init(value: 49, unit: .minutes),
@@ -145,7 +145,7 @@ struct PreviewData {
             self.delay = delay
         }
         
-        func getAll() -> AnyPublisher<[Activity], Error> {
+        func getAll() -> AnyPublisher<[Activity.Summary], Error> {
             Future { promise in
                 DispatchQueue.global().asyncAfter(deadline: .now() + delay) {
                     promise(.success(PreviewData.activities))
@@ -154,11 +154,11 @@ struct PreviewData {
             .eraseToAnyPublisher()
         }
 
-        func loadRoute(of activity: Activity) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error> {
+        func loadRoute(of activity: Activity.Summary) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error> {
             Just<[CLLocationCoordinate2D]?>(nil).setFailureType(to: Error.self).eraseToAnyPublisher()
         }
 
-        func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Swift.Error> {
+        func loadHeartRate(of activity: Activity.Summary) -> AnyPublisher<[Double], Swift.Error> {
             Just<[Double]>([]).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
         }
     }

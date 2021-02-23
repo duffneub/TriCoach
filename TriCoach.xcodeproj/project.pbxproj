@@ -12,7 +12,6 @@
 		172DD1BF25CDB8F5009E3A83 /* Color+TriCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172DD1BE25CDB8F5009E3A83 /* Color+TriCoach.swift */; };
 		172DD1C425CDB928009E3A83 /* ActivityServiceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172DD1C325CDB928009E3A83 /* ActivityServiceRepository.swift */; };
 		172EA16625C2534000A18196 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA16525C2534000A18196 /* PreviewData.swift */; };
-		172EA17525C256B000A18196 /* ActivityCatalogViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA17425C256B000A18196 /* ActivityCatalogViewModelTests.swift */; };
 		172EA17A25C32B4300A18196 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EA17925C32B4300A18196 /* Activity.swift */; };
 		172F3B2925CA20A100B5F199 /* MeasurementFormatter+Sports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F3B2825CA20A100B5F199 /* MeasurementFormatter+Sports.swift */; };
 		172F3B2F25CA248200B5F199 /* Activity+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F3B2E25CA248200B5F199 /* Activity+TestHelpers.swift */; };
@@ -60,7 +59,6 @@
 		172DD1BE25CDB8F5009E3A83 /* Color+TriCoach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+TriCoach.swift"; sourceTree = "<group>"; };
 		172DD1C325CDB928009E3A83 /* ActivityServiceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityServiceRepository.swift; sourceTree = "<group>"; };
 		172EA16525C2534000A18196 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
-		172EA17425C256B000A18196 /* ActivityCatalogViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCatalogViewModelTests.swift; sourceTree = "<group>"; };
 		172EA17925C32B4300A18196 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		172F3B2825CA20A100B5F199 /* MeasurementFormatter+Sports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MeasurementFormatter+Sports.swift"; sourceTree = "<group>"; };
 		172F3B2E25CA248200B5F199 /* Activity+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Activity+TestHelpers.swift"; sourceTree = "<group>"; };
@@ -223,7 +221,6 @@
 		17762E1C25C102FC00BE89BD /* TriCoachTests */ = {
 			isa = PBXGroup;
 			children = (
-				172EA17425C256B000A18196 /* ActivityCatalogViewModelTests.swift */,
 				172F3B5525CB326100B5F199 /* HealthKitActivityServiceTests.swift */,
 				178F116A25CC855D0047BC3F /* ActivityServiceRepositoryTests.swift */,
 				172F3B3625CA249D00B5F199 /* Utilities */,
@@ -424,7 +421,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				172EA17525C256B000A18196 /* ActivityCatalogViewModelTests.swift in Sources */,
 				172F3B3B25CA24D800B5F199 /* Date+TestHelpers.swift in Sources */,
 				178F116B25CC855D0047BC3F /* ActivityServiceRepositoryTests.swift in Sources */,
 				172F3B4525CA253000B5F199 /* XCTestCase+Combine.swift in Sources */,

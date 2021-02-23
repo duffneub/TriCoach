@@ -34,7 +34,7 @@ struct ActivityBrowser : View {
         .init(
             date: Date(),
             activities: ["Placeholder", "Pretty Long Placeholder", "Another Placeholder"].map {
-                Activity(
+                Activity.Summary(
                     sport: .swim,
                     workout: $0,
                     duration: .init(value: 100, unit: .hours),
@@ -45,9 +45,9 @@ struct ActivityBrowser : View {
 }
 
 struct NewActivityDetailsView : View {
-    var activity: Activity
+    var activity: Activity.Summary
 
-    init(_ activity: Activity) {
+    init(_ activity: Activity.Summary) {
         self.activity = activity
     }
 

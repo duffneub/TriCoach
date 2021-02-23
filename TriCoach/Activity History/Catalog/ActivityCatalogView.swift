@@ -9,9 +9,9 @@ import SwiftUI
 
 struct ActivityCatalogView : View {
     var content: [Section]
-    @Binding var selection: Activity?
+    @Binding var selection: Activity.Summary?
 
-    init(content: [Section], selection: Binding<Activity?>) {
+    init(content: [Section], selection: Binding<Activity.Summary?>) {
         self.content = content
         self._selection = selection
     }

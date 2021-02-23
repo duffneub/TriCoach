@@ -12,7 +12,7 @@ import CoreLocation
 
 struct Section : Identifiable {
     let date: Date
-    let activities: [Activity]
+    let activities: [Activity.Summary]
 
     var id: Int {
         var hasher = Hasher()
@@ -22,19 +22,19 @@ struct Section : Identifiable {
 }
 
 class ActivityCatalog : ObservableObject {
-    typealias Group = (date: Date, activities: [Activity])
+    typealias Group = (date: Date, activities: [Activity.Summary])
 
     private let grouping: Set<Calendar.Component> = [.yearForWeekOfYear, .weekOfYear]
     private let activityRepo: ActivityRepository
 
     private var calendar: Calendar = .current
-    private var activities: [Activity] = []
+    private var activities: [Activity.Summary] = []
 
-    @Published var routes: [Activity.ID: AsyncState<[CLLocationCoordinate2D]?>] = [:]
-    @Published var heartRate: [Activity.ID: AsyncState<[Double]>] = [:]
+    @Published var routes: [Activity.Summary.ID: AsyncState<[CLLocationCoordinate2D]?>] = [:]
+    @Published var heartRate: [Activity.Summary.ID: AsyncState<[Double]>] = [:]
 
     @Published var state: State = .ready
-    @Published var selectedActivity: Activity?
+    @Published var selectedActivity: Activity.Summary?
 
     var isLoading: Bool {
         state.isLoading
@@ -69,11 +69,11 @@ class ActivityCatalog : ObservableObject {
             
     }
 
-    func route(of activity: Activity) -> AsyncState<[CLLocationCoordinate2D]?> {
+    func route(of activity: Activity.Summary) -> AsyncState<[CLLocationCoordinate2D]?> {
         routes[activity.id, default: .ready]
     }
 
-    func loadRoute(of activity: Activity) {
+    func loadRoute(of activity: Activity.Summary) {
         guard routes[activity.id] == nil else {
             return
         }
@@ -92,11 +92,11 @@ class ActivityCatalog : ObservableObject {
             .assign(to: &$routes)
     }
 
-    func heartRate(of activity: Activity) -> AsyncState<[Double]> {
+    func heartRate(of activity: Activity.Summary) -> AsyncState<[Double]> {
         heartRate[activity.id, default: .ready]
     }
 
-    func loadHeartRate(of activity: Activity) {
+    func loadHeartRate(of activity: Activity.Summary) {
         guard heartRate[activity.id] == nil else {
             return
         }
@@ -133,11 +133,11 @@ class ActivityCatalog : ObservableObject {
         return .success(groups)
     }
 
-    func select(_ activity: Activity) {
+    func select(_ activity: Activity.Summary) {
         selectedActivity = activity
     }
     
-    func deselect(_ activity: Activity) {
+    func deselect(_ activity: Activity.Summary) {
         selectedActivity = nil
     }
 

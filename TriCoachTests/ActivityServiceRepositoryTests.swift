@@ -21,7 +21,7 @@ class ActivityServiceRepositoryTests: XCTestCase {
     }
 
     func testGetAll_shouldReturnActivitiesFromService() throws {
-        let activities = (0..<100).map { Activity.test(workout: "#\($0 + 1)") }
+        let activities = (0..<100).map { Activity.Summary.test(workout: "#\($0 + 1)") }
         service.activitiesResponse = .success(activities)
         
         XCTAssertEqual(activities, try await(subject.getAll()))
@@ -50,13 +50,13 @@ class ActivityServiceRepositoryTests: XCTestCase {
 class MockActivityService : ActivityService {
     var isAvailable: Bool = true
     var authorizationResponse = Result<Void, Error>.success(())
-    var activitiesResponse = Result<[Activity], Error>.success([])
+    var activitiesResponse = Result<[Activity.Summary], Error>.success([])
     
     func requestAuthorization() -> AnyPublisher<Void, Swift.Error> {
         authorizationResponse.publisher.mapError { $0 as Swift.Error }.eraseToAnyPublisher()
     }
     
-    func getActivities() -> AnyPublisher<[Activity], Swift.Error> {
+    func getActivities() -> AnyPublisher<[Activity.Summary], Swift.Error> {
         activitiesResponse.publisher.mapError { $0 as Swift.Error }.eraseToAnyPublisher()
     }
 
@@ -65,7 +65,7 @@ class MockActivityService : ActivityService {
         Just<[CLLocationCoordinate2D]?>(nil).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
     }
 
-    func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Swift.Error> {
+    func loadHeartRate(of activity: Activity.Summary) -> AnyPublisher<[Double], Swift.Error> {
         Just<[Double]>([]).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
     }
     
