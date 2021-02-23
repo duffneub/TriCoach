@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CoreLocation
 import Foundation
 @testable import TriCoach
 
@@ -30,6 +31,14 @@ class MockActivityRepository : ActivityRepository {
         } else {
             return subject.eraseToAnyPublisher()
         }
+    }
+
+    func loadRoute(of activity: Activity) -> AnyPublisher<[CLLocationCoordinate2D]?, Error> {
+        Just<[CLLocationCoordinate2D]?>(nil).setFailureType(to: Error.self).eraseToAnyPublisher()
+    }
+
+    func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Error> {
+        Just<[Double]>([]).setFailureType(to: Error.self).eraseToAnyPublisher()
     }
     
     func add(_ activity: Activity) {

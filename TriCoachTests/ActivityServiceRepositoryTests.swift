@@ -5,6 +5,7 @@
 //  Created by Duff Neubauer on 2/4/21.
 //
 
+import CoreLocation
 import Combine
 import XCTest
 @testable import TriCoach
@@ -57,6 +58,15 @@ class MockActivityService : ActivityService {
     
     func getActivities() -> AnyPublisher<[Activity], Swift.Error> {
         activitiesResponse.publisher.mapError { $0 as Swift.Error }.eraseToAnyPublisher()
+    }
+
+
+    func getRoute(for activity: UUID) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error> {
+        Just<[CLLocationCoordinate2D]?>(nil).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
+    }
+
+    func loadHeartRate(of activity: Activity) -> AnyPublisher<[Double], Swift.Error> {
+        Just<[Double]>([]).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
     }
     
     // MARK: - Error
