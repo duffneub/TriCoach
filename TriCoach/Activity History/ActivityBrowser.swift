@@ -23,8 +23,14 @@ struct ActivityBrowser : View {
                 .redacted(reason: catalog.isLoading ? .placeholder : [])
                 .onAppear(perform: catalog.loadCatalog)
                 .navigationTitle("Recent")
+
+            ZStack {
+                Color.systemGroupedBackground.edgesIgnoringSafeArea(.all)
+                Text("No Activity Selected").font(.headline).foregroundColor(.secondary)
+            }
+                .navigationBarHidden(true)
         }
-        .navigationViewStyle(StackNavigationViewStyle())
+        .navigationViewStyle(DoubleColumnNavigationViewStyle())
     }
 
     // MARK: - View Constants

@@ -29,7 +29,7 @@ struct DistanceWidget : View {
 }
 
 struct ActivityDetailsView: View {
-    private let columns = [GridItem(.flexible()), GridItem(.flexible())]
+    private let columns = (0..<2).map { _ in GridItem(.flexible(maximum: 200)) }
     private let measurementFormatter = MeasurementFormatter()
     private var activity: Activity.Summary
 
@@ -65,7 +65,7 @@ struct ActivityDetailsView: View {
                     MetricWidget(
                         image: "heart.fill",
                         name: "Avg. Heart Rate",
-                        value: "\(activityCatalog.heartRate(of: activity).value.map { Int($0.reduce(0, +) / Double($0.count)) } ?? 0)",
+                        value: "\(activityCatalog.heartRate(of: activity).value.map { Int($0.reduce(0, +) / Double(max(1, $0.count))) } ?? 0)",
                         unit: "Beats Per Minute")
                 }
 
@@ -76,7 +76,7 @@ struct ActivityDetailsView: View {
                 activityCatalog.loadHeartRate(of: activity)
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(true)
     }
 
     // MARK: - Access to Model
