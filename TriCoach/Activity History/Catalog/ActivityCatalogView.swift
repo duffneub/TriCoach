@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ActivityCatalog : View {
+struct ActivityCatalogView : View {
     var content: [Section]
     @Binding var selection: Activity?
 

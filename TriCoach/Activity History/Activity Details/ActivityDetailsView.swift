@@ -33,7 +33,7 @@ struct ActivityDetailsView: View {
     private let measurementFormatter = MeasurementFormatter()
     private var activity: Activity
 
-    @EnvironmentObject private var store: ActivityStore
+    @EnvironmentObject private var activityCatalog: ActivityCatalog
 
     init(_ activity: Activity) {
         self.activity = activity
@@ -48,7 +48,7 @@ struct ActivityDetailsView: View {
                 ActivityDetailsHeader(image: image, name: name, date: date, time: time)
                     .padding(.bottom)
 
-                AsyncMap(store.route(of: activity), loadRoute: { store.loadRoute(of: activity) })
+                AsyncMap(activityCatalog.route(of: activity), loadRoute: { activityCatalog.loadRoute(of: activity) })
                     .allowsHitTesting(false)
                     .aspectRatio(1.5, contentMode: .fit)
                     .tile(padding: 0)
@@ -65,7 +65,7 @@ struct ActivityDetailsView: View {
                     MetricWidget(
                         image: "heart.fill",
                         name: "Avg. Heart Rate",
-                        value: "\(store.heartRate(of: activity).value.map { Int($0.reduce(0, +) / Double($0.count)) } ?? 0)",
+                        value: "\(activityCatalog.heartRate(of: activity).value.map { Int($0.reduce(0, +) / Double($0.count)) } ?? 0)",
                         unit: "Beats Per Minute")
                 }
 
@@ -73,7 +73,7 @@ struct ActivityDetailsView: View {
             }
             .padding([.top, .leading, .trailing])
             .onAppear {
-                store.loadHeartRate(of: activity)
+                activityCatalog.loadHeartRate(of: activity)
             }
         }
         .navigationBarTitleDisplayMode(.inline)

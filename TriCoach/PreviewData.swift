@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-class TestActivityStore : ActivityStore {
+class TestActivityCatalog : ActivityCatalog {
     init() {
         super.init(
             activityRepo: TestActivityRepository(),

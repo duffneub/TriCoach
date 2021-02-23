@@ -10,18 +10,18 @@ import SwiftUI
 // MARK - ActivityBrowser
 
 struct ActivityBrowser : View {
-    @ObservedObject var store: ActivityStore
+    @ObservedObject var catalog: ActivityCatalog
 
-    init(_ store: ActivityStore) {
-        self.store = store
+    init(_ store: ActivityCatalog) {
+        self.catalog = store
     }
 
     var body: some View {
         NavigationView {
-            ActivityCatalog(content: store.sections ?? placeholder, selection: $store.selectedActivity)
-                .allowsHitTesting(!store.isLoading)
-                .redacted(reason: store.isLoading ? .placeholder : [])
-                .onAppear(perform: store.loadCatalog)
+            ActivityCatalogView(content: catalog.sections ?? placeholder, selection: $catalog.selectedActivity)
+                .allowsHitTesting(!catalog.isLoading)
+                .redacted(reason: catalog.isLoading ? .placeholder : [])
+                .onAppear(perform: catalog.loadCatalog)
                 .navigationTitle("Recent")
         }
         .navigationViewStyle(StackNavigationViewStyle())
@@ -61,7 +61,7 @@ struct NewActivityDetailsView : View {
 struct ActivityBrowser_Previews : PreviewProvider {
     static var previews: some View {
         ForEach(ColorScheme.allCases, id: \.self) {
-            ActivityBrowser(TestActivityStore()).preferredColorScheme($0)
+            ActivityBrowser(TestActivityCatalog()).preferredColorScheme($0)
         }
         .previewDevice(PreviewDevice(rawValue: "iPhone 12 mini"))
     }

@@ -13,18 +13,18 @@ class TriCoach : ObservableObject {
     @Published var selectedSection: TriCoach.Section = .history
 
     @Published var settingsStore: SettingsStore
-    @Published var activityStore: ActivityStore!
+    @Published var activityCatalog: ActivityCatalog!
 
     init(config: Configuration = .production) {
         settingsStore = SettingsStore()
 
         switch config {
         case .simulator:
-            activityStore = ActivityStore(
+            activityCatalog = ActivityCatalog(
                 activityRepo: PreviewData.FakeActivityRepository(delay: 1),
                 calendar: settingsStore.$calendar.eraseToAnyPublisher())
         case .production:
-            activityStore = ActivityStore(
+            activityCatalog = ActivityCatalog(
                 activityRepo: ActivityServiceRepository(service: HKHealthStore()),
                 calendar: settingsStore.$calendar.eraseToAnyPublisher())
         }

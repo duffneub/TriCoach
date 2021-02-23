@@ -34,7 +34,7 @@
 		178F117B25CC987D0047BC3F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 178F117A25CC987D0047BC3F /* HealthKit.framework */; };
 		179CB64E25D2DDC1001D767C /* ActivityDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179CB64D25D2DDC1001D767C /* ActivityDetailsView.swift */; };
 		17F3346625C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3346525C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift */; };
-		17FE2CE325D60048006E516D /* ActivityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FE2CE225D60048006E516D /* ActivityStore.swift */; };
+		17FE2CE325D60048006E516D /* ActivityCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FE2CE225D60048006E516D /* ActivityCatalog.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,7 +89,7 @@
 		178F117A25CC987D0047BC3F /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		179CB64D25D2DDC1001D767C /* ActivityDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailsView.swift; sourceTree = "<group>"; };
 		17F3346525C9E4C700FF31C9 /* GranularRelativeDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GranularRelativeDateFormatter.swift; sourceTree = "<group>"; };
-		17FE2CE225D60048006E516D /* ActivityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityStore.swift; sourceTree = "<group>"; };
+		17FE2CE225D60048006E516D /* ActivityCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCatalog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,7 +121,7 @@
 		1729A63825D747CB00A16954 /* Activity History */ = {
 			isa = PBXGroup;
 			children = (
-				17FE2CE225D60048006E516D /* ActivityStore.swift */,
+				17FE2CE225D60048006E516D /* ActivityCatalog.swift */,
 				172DD1C325CDB928009E3A83 /* ActivityServiceRepository.swift */,
 				1749791825DD77B30060D612 /* ActivityBrowser.swift */,
 				176215AE25DED38F00E7081B /* Catalog */,
@@ -413,7 +413,7 @@
 				172F3B2925CA20A100B5F199 /* MeasurementFormatter+Sports.swift in Sources */,
 				172DD1BF25CDB8F5009E3A83 /* Color+TriCoach.swift in Sources */,
 				17762E0E25C102FB00BE89BD /* ActivityCatalogView.swift in Sources */,
-				17FE2CE325D60048006E516D /* ActivityStore.swift in Sources */,
+				17FE2CE325D60048006E516D /* ActivityCatalog.swift in Sources */,
 				17762E0C25C102FB00BE89BD /* TriCoachApp.swift in Sources */,
 				1785C51A25D44C890016B88D /* Tile.swift in Sources */,
 				172EA16625C2534000A18196 /* PreviewData.swift in Sources */,

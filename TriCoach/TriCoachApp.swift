@@ -35,8 +35,8 @@ struct TriCoachApp: App {
                     Group {
                         switch section {
                         case .history:
-                            ActivityBrowser(app.activityStore)
-                                .environmentObject(app.activityStore)
+                            ActivityBrowser(app.activityCatalog)
+                                .environmentObject(app.activityCatalog)
                         default:
                             Color.red
                         }
@@ -62,7 +62,7 @@ private struct AppTabView : View {
                 Group {
                     switch section {
                     case .history:
-                        ActivityBrowser(app.activityStore)
+                        ActivityBrowser(app.activityCatalog)
                     default:
                         Color.red
                     }

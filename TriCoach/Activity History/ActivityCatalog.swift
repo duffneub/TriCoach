@@ -1,5 +1,5 @@
 //
-//  ActivityStore.swift
+//  ActivityCatalog.swift
 //  TriCoach
 //
 //  Created by Duff Neubauer on 2/11/21.
@@ -21,7 +21,7 @@ struct Section : Identifiable {
     }
 }
 
-class ActivityStore : ObservableObject {
+class ActivityCatalog : ObservableObject {
     typealias Group = (date: Date, activities: [Activity])
 
     private let grouping: Set<Calendar.Component> = [.yearForWeekOfYear, .weekOfYear]
