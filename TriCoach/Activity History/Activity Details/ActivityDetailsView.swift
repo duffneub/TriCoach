@@ -76,7 +76,7 @@ struct ActivityDetailsView: View {
                 activityCatalog.loadHeartRate(of: activity)
             }
         }
-        .navigationBarHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     // MARK: - Access to Model
