@@ -59,15 +59,6 @@ class MockActivityService : ActivityService {
     func getActivities() -> AnyPublisher<[Activity.Summary], Swift.Error> {
         activitiesResponse.publisher.mapError { $0 as Swift.Error }.eraseToAnyPublisher()
     }
-
-
-    func getRoute(for activity: UUID) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error> {
-        Just<[CLLocationCoordinate2D]?>(nil).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
-    }
-
-    func loadHeartRate(of activity: Activity.Summary) -> AnyPublisher<[Double], Swift.Error> {
-        Just<[Double]>([]).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
-    }
     
     // MARK: - Error
     

@@ -32,14 +32,6 @@ class MockActivityRepository : ActivityRepository {
             return subject.eraseToAnyPublisher()
         }
     }
-
-    func loadRoute(of activity: Activity.Summary) -> AnyPublisher<[CLLocationCoordinate2D]?, Error> {
-        Just<[CLLocationCoordinate2D]?>(nil).setFailureType(to: Error.self).eraseToAnyPublisher()
-    }
-
-    func loadHeartRate(of activity: Activity.Summary) -> AnyPublisher<[Double], Error> {
-        Just<[Double]>([]).setFailureType(to: Error.self).eraseToAnyPublisher()
-    }
     
     func add(_ activity: Activity.Summary) {
         add([activity])

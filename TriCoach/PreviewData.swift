@@ -45,12 +45,14 @@ fileprivate struct TestActivityRepository : ActivityRepository {
         .eraseToAnyPublisher()
     }
 
-    func loadRoute(of activity: Activity.Summary) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error> {
-        Just<[CLLocationCoordinate2D]?>(nil).setFailureType(to: Error.self).eraseToAnyPublisher()
-    }
-
-    func loadHeartRate(of activity: Activity.Summary) -> AnyPublisher<[Double], Swift.Error> {
-        Just<[Double]>([]).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
+    func loadDetails(of activity: Activity.Summary.ID) -> AnyPublisher<Activity.Details, Error> {
+        Just<Activity.Details>(.init(
+                                route: [],
+                                elevation: [],
+                                heartRate: [],
+                                speed: []))
+            .setFailureType(to: Swift.Error.self)
+            .eraseToAnyPublisher()
     }
 }
 
@@ -154,12 +156,14 @@ struct PreviewData {
             .eraseToAnyPublisher()
         }
 
-        func loadRoute(of activity: Activity.Summary) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error> {
-            Just<[CLLocationCoordinate2D]?>(nil).setFailureType(to: Error.self).eraseToAnyPublisher()
-        }
-
-        func loadHeartRate(of activity: Activity.Summary) -> AnyPublisher<[Double], Swift.Error> {
-            Just<[Double]>([]).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
+        func loadDetails(of activity: Activity.Summary.ID) -> AnyPublisher<Activity.Details, Error> {
+            Just<Activity.Details>(.init(
+                                    route: [],
+                                    elevation: [],
+                                    heartRate: [],
+                                    speed: []))
+                .setFailureType(to: Swift.Error.self)
+                .eraseToAnyPublisher()
         }
     }
 }

@@ -30,8 +30,7 @@ class ActivityCatalog : ObservableObject {
     private var calendar: Calendar = .current
     private var activities: [Activity.Summary] = []
 
-    @Published var routes: [Activity.Summary.ID: AsyncState<[CLLocationCoordinate2D]?>] = [:]
-    @Published var heartRate: [Activity.Summary.ID: AsyncState<[Double]>] = [:]
+    @Published var details: [Activity.Summary.ID: AsyncState<Activity.Details>] = [:]
 
     @Published var state: State = .ready
     @Published var selectedActivity: Activity.Summary?
@@ -69,55 +68,27 @@ class ActivityCatalog : ObservableObject {
             
     }
 
-    func route(of activity: Activity.Summary) -> AsyncState<[CLLocationCoordinate2D]?> {
-        routes[activity.id, default: .ready]
+    func details(of activity: Activity.Summary.ID) -> AsyncState<Activity.Details> {
+        details[activity, default: .ready]
     }
 
-    func loadRoute(of activity: Activity.Summary) {
-        guard routes[activity.id] == nil else {
+    func loadDetails(of activity: Activity.Summary.ID) {
+        guard details[activity] == nil else {
             return
         }
 
-        routes[activity.id] = .loading
+        details[activity] = .loading
 
-        activityRepo.loadRoute(of: activity)
+        activityRepo.loadDetails(of: activity)
             .assertNoFailure()
             .map { AsyncState.success($0) }
             .map {
-                var newRoutes = self.routes
-                newRoutes[activity.id] = $0
-                return newRoutes
+                var update = self.details
+                update[activity] = $0
+                return update
             }
             .receive(on: DispatchQueue.main)
-            .assign(to: &$routes)
-    }
-
-    func heartRate(of activity: Activity.Summary) -> AsyncState<[Double]> {
-        heartRate[activity.id, default: .ready]
-    }
-
-    func loadHeartRate(of activity: Activity.Summary) {
-        guard heartRate[activity.id] == nil else {
-            return
-        }
-
-        heartRate[activity.id] = .loading
-
-        activityRepo.loadHeartRate(of: activity)
-            .assertNoFailure()
-            .handleEvents(receiveOutput: { samples in
-                samples.forEach {
-                    print($0)
-                }
-            })
-            .map { AsyncState.success($0) }
-            .map {
-                var new = self.heartRate
-                new[activity.id] = $0
-                return new
-            }
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$heartRate)
+            .assign(to: &$details)
     }
 
     private func updateCatalog() -> State {
@@ -128,7 +99,7 @@ class ActivityCatalog : ObservableObject {
             calendar.date(from: calendar.dateComponents(grouping, from: activity.date))!
         }
         .sorted {  $0.key > $1.key }
-        .map { (date: $0.key, activities: $0.value) }
+        .map { (date: $0.key, activities: $0.value.sorted()) }
 
         return .success(groups)
     }

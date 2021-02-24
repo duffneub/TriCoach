@@ -35,6 +35,20 @@ struct Activity {
             self.date = date
         }
     }
+
+    // TODO: Convert values to `Measurement`
+    struct Details {
+        let route: [Coordinate]?
+        let elevation: [Measurement<UnitLength>]?
+        let heartRate: [Double] // Value is measured in beats per minute
+        let speed: [Measurement<UnitSpeed>]?
+
+    }
+}
+
+struct Coordinate {
+    let latitude: Double
+    let longitude: Double
 }
 
 extension Activity.Summary {
@@ -57,6 +71,5 @@ import CoreLocation
 
 protocol ActivityRepository {
     func getAll() -> AnyPublisher<[Activity.Summary], Error>
-    func loadRoute(of activity: Activity.Summary) -> AnyPublisher<[CLLocationCoordinate2D]?, Swift.Error>
-    func loadHeartRate(of activity: Activity.Summary) -> AnyPublisher<[Double], Swift.Error>
+    func loadDetails(of activity: Activity.Summary.ID) -> AnyPublisher<Activity.Details, Error>
 }

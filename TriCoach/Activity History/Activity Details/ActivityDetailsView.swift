@@ -5,28 +5,8 @@
 //  Created by Duff Neubauer on 2/9/21.
 //
 
+import CoreLocation
 import SwiftUI
-
-struct DistanceWidget : View {
-    private let numberFormatter = NumberFormatter()
-    private let measurementFormatter = MeasurementFormatter()
-    private let distance: Measurement<UnitLength>
-
-    init(_ distance: Measurement<UnitLength>) {
-        self.distance = distance
-
-        numberFormatter.maximumFractionDigits = 1
-        measurementFormatter.unitStyle = .long
-    }
-
-    var body: some View {
-        MetricWidget(
-            image: "location.circle.fill",
-            name: "Distance",
-            value: numberFormatter.string(from: .init(value: distance.value))!,
-            unit: measurementFormatter.string(from: distance.unit))
-    }
-}
 
 struct ActivityDetailsView: View {
     private let columns = (0..<2).map { _ in GridItem(.flexible(maximum: 200)) }
@@ -48,32 +28,50 @@ struct ActivityDetailsView: View {
                 ActivityDetailsHeader(image: image, name: name, date: date, time: time)
                     .padding(.bottom)
 
-                AsyncMap(activityCatalog.route(of: activity), loadRoute: { activityCatalog.loadRoute(of: activity) })
-                    .allowsHitTesting(false)
-                    .aspectRatio(1.5, contentMode: .fit)
-                    .tile(padding: 0)
+                Group {
+                    if activityCatalog.details(of: activity.id).isLoading {
+                        ProgressView("Loading…")
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else {
+                        if route.count > 0 {
+                            LegacyMap(route: route)
+                                .allowsHitTesting(false)
+                        }
+                    }
+                }
+                .aspectRatio(1.5, contentMode: .fit)
+                .tile(padding: 0)
 
                 LazyVGrid(columns: columns) {
-                    MetricWidget(
-                        image: "timer",
-                        name: "Duration",
-                        value: "\(measurementFormatter.hoursAndMinutes(from: activity.duration))",
-                        unit: "elapsed")
+                    MetricWidget(totalDuration)
 
-                    DistanceWidget(activity.distance)
+                    MetricWidget(totalDistance)
 
-                    MetricWidget(
-                        image: "heart.fill",
-                        name: "Avg. Heart Rate",
-                        value: "\(activityCatalog.heartRate(of: activity).value.map { Int($0.reduce(0, +) / Double(max(1, $0.count))) } ?? 0)",
-                        unit: "Beats Per Minute")
+                    MetricWidget(averageHeartRate)
+                    MetricWidget(maxHeartRate)
+
+                    if activityCatalog.details(of: activity.id).isLoading ||
+                        activityCatalog.details(of: activity.id).value?.elevation != nil
+                    {
+                        MetricWidget(averageElevation)
+                        MetricWidget(minElevation)
+                        MetricWidget(maxElevation)
+                    }
+
+                    if activityCatalog.details(of: activity.id).isLoading ||
+                        activityCatalog.details(of: activity.id).value?.speed != nil
+                    {
+                        MetricWidget(averageSpeed)
+                        MetricWidget(maxSpeed)
+                    }
                 }
+                .redacted(reason: activityCatalog.details(of: activity.id).isLoading ? .placeholder : [])
 
                 Spacer()
             }
             .padding([.top, .leading, .trailing])
             .onAppear {
-                activityCatalog.loadHeartRate(of: activity)
+                activityCatalog.loadDetails(of: activity.id)
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -103,6 +101,142 @@ struct ActivityDetailsView: View {
     var time: String {
         DateFormatter.localizedString(from: activity.date, dateStyle: .none, timeStyle: .long)
     }
+
+    var route: [CLLocationCoordinate2D] {
+        activityCatalog.details(of: activity.id).value?.route?
+            .map { CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude) }
+            ?? []
+    }
+
+    var totalDuration: WidgetConfiguration {
+        .init(
+            image: "timer",
+            label: "Duration",
+            value: measurementFormatter.hoursAndMinutes(from: activity.duration),
+            unit: "elapsed")
+    }
+
+    var totalDistance: WidgetConfiguration {
+        let numberFormatter = NumberFormatter()
+        let measurementFormatter = MeasurementFormatter()
+
+        numberFormatter.maximumFractionDigits = 1
+        measurementFormatter.unitStyle = .long
+
+        return .init(
+            image: "location.circle.fill",
+            label: "Distance",
+            value: numberFormatter.string(from: .init(value: activity.distance.value))!,
+            unit: measurementFormatter.string(from: activity.distance.unit))
+    }
+
+    var averageHeartRate: WidgetConfiguration {
+        let heartRate = activityCatalog.details(of: activity.id).value?.heartRate ?? []
+        let sum = heartRate.reduce(0, +)
+        let denominator = Double(max(1, heartRate.count))
+        let average = Int(sum / denominator)
+
+        return .init(
+            image: "heart.fill",
+            label: "Avg. Heart Rate",
+            value: "\(average)",
+            unit: "Beats Per Minute")
+    }
+
+    var maxHeartRate: WidgetConfiguration {
+        return .init(
+            image: "heart.fill",
+            label: "Max Heart Rate",
+            value: "\(activityCatalog.details(of: activity.id).value?.heartRate.max() ?? 0)",
+            unit: "Beats Per Minute")
+    }
+
+    var averageElevation: WidgetConfiguration {
+        let numberFormatter = NumberFormatter()
+        let measurementFormatter = MeasurementFormatter()
+
+        numberFormatter.maximumFractionDigits = 1
+        measurementFormatter.unitStyle = .long
+
+        let elevation = activityCatalog.details(of: activity.id).value?.elevation ?? []
+        let sum = elevation.map { $0.value }.reduce(0, +)
+        let denominator = Double(max(1, elevation.count))
+        let average = Int(sum / denominator)
+
+        return .init(
+            image: "airplane",
+            label: "Avg. Elevation",
+            value: numberFormatter.string(from: .init(value: average))!,
+            unit: "Meters")
+    }
+
+    var minElevation: WidgetConfiguration {
+        let numberFormatter = NumberFormatter()
+        let measurementFormatter = MeasurementFormatter()
+
+        numberFormatter.maximumFractionDigits = 1
+        measurementFormatter.unitStyle = .long
+
+        return .init(
+            image: "airplane",
+            label: "Min Elevation",
+            value: numberFormatter.string(from: .init(value: activityCatalog.details(of: activity.id).value?.elevation?.min()?.value ?? 0))!,
+            unit: "Meters")
+    }
+
+    var maxElevation: WidgetConfiguration {
+        let numberFormatter = NumberFormatter()
+        let measurementFormatter = MeasurementFormatter()
+
+        numberFormatter.maximumFractionDigits = 1
+        measurementFormatter.unitStyle = .long
+
+        return .init(
+            image: "airplane",
+            label: "Max Elevation",
+            value: numberFormatter.string(from: .init(value: activityCatalog.details(of: activity.id).value?.elevation?.max()?.value ?? 0))!,
+            unit: "Meters")
+    }
+
+    var averageSpeed: WidgetConfiguration {
+        let numberFormatter = NumberFormatter()
+        let measurementFormatter = MeasurementFormatter()
+
+        numberFormatter.maximumFractionDigits = 1
+        measurementFormatter.unitStyle = .long
+
+        let speed = activityCatalog.details(of: activity.id).value?.speed ?? []
+        let sum = speed.map { $0.converted(to: .milesPerHour).value }.reduce(0, +)
+        let denominator = Double(max(1, speed.count))
+        let average = Int(sum / denominator)
+
+        return .init(
+            image: "hare.fill",
+            label: "Avg. Speed",
+            value: numberFormatter.string(from: .init(value: average))!,
+            unit: "Miles per Hour")
+    }
+
+    var maxSpeed: WidgetConfiguration {
+        let numberFormatter = NumberFormatter()
+        let measurementFormatter = MeasurementFormatter()
+
+        numberFormatter.maximumFractionDigits = 1
+        measurementFormatter.unitStyle = .long
+
+        return .init(
+            image: "hare.fill",
+            label: "Max Speed",
+            value: numberFormatter.string(from: .init(value: activityCatalog.details(of: activity.id).value?.speed?.max()?.converted(to: .milesPerHour).value ?? 0))!,
+            unit: "Miles per Hour")
+    }
+}
+
+struct WidgetConfiguration {
+    let image: String
+    let label: String
+    let value: String
+    let unit: String
 }
 
 // MARK: - ActivityDetailsHeader
@@ -146,47 +280,20 @@ private struct ActivityDetailsHeader : View {
     private let imageHeight: CGFloat = 50
 }
 
-// MARK: - AsyncMap
-
-import CoreLocation
-
-private struct AsyncMap : View {
-    private let state: AsyncState<[CLLocationCoordinate2D]?>
-    private let loadRoute: () -> Void
-
-    init(_ state: AsyncState<[CLLocationCoordinate2D]?>, loadRoute: @escaping () -> Void) {
-        self.state = state
-        self.loadRoute = loadRoute
-    }
-
-    var body: some View {
-        Group {
-            switch state {
-            case .ready:
-                Color.clear
-                    .onAppear(perform: loadRoute)
-            case .loading:
-                ProgressView("Loading…")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            case let .success(route):
-                if route != nil {
-                    LegacyMap(route: route)
-                } else {
-                    Text("Route Unavailable")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-            }
-        }
-    }
-}
-
 // MARK: - MetricWidget
 
 private struct MetricWidget : View {
     var image: String
-    var name: String
+    var label: String
     var value: String
     var unit: String
+
+    init(_ config: WidgetConfiguration) {
+        self.image = config.image
+        self.label = config.label
+        self.value = config.value
+        self.unit = config.unit
+    }
 
     var body: some View {
         ZStack(alignment: Alignment.topLeading) {
@@ -197,10 +304,10 @@ private struct MetricWidget : View {
                 .frame(width: imageWidth)
 
             VStack(spacing: spacing) {
-                Text(name)
+                Text(label)
                     .font(.caption)
                     .foregroundColor(.secondary)
-                    .padding(.horizontal, namePadding)
+                    .padding(.horizontal, labelPadding)
                     .multilineTextAlignment(.center)
 
                 Text(value)
@@ -221,7 +328,7 @@ private struct MetricWidget : View {
 
     private let imageWidth: CGFloat = 14
     private let spacing: CGFloat = 8
-    private let namePadding: CGFloat = 20
+    private let labelPadding: CGFloat = 20
 }
 
 struct ActivityDetailsView_Previews: PreviewProvider {
