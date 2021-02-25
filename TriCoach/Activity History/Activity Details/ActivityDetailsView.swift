@@ -43,26 +43,8 @@ struct ActivityDetailsView: View {
                 .tile(padding: 0)
 
                 LazyVGrid(columns: columns) {
-                    MetricWidget(totalDuration)
-
-                    MetricWidget(totalDistance)
-
-                    MetricWidget(averageHeartRate)
-                    MetricWidget(maxHeartRate)
-
-                    if activityCatalog.details(of: activity.id).isLoading ||
-                        activityCatalog.details(of: activity.id).value?.elevation != nil
-                    {
-                        MetricWidget(averageElevation)
-                        MetricWidget(minElevation)
-                        MetricWidget(maxElevation)
-                    }
-
-                    if activityCatalog.details(of: activity.id).isLoading ||
-                        activityCatalog.details(of: activity.id).value?.speed != nil
-                    {
-                        MetricWidget(averageSpeed)
-                        MetricWidget(maxSpeed)
+                    ForEach(widgets, id: \.label) { config in
+                        MetricWidget(config)
                     }
                 }
                 .redacted(reason: activityCatalog.details(of: activity.id).isLoading ? .placeholder : [])
@@ -106,6 +88,24 @@ struct ActivityDetailsView: View {
         activityCatalog.details(of: activity.id).value?.route?
             .map { CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude) }
             ?? []
+    }
+
+    var widgets: [WidgetConfiguration] {
+        var metrics = [totalDuration, totalDistance, averageHeartRate, maxHeartRate]
+
+        if activityCatalog.details(of: activity.id).isLoading ||
+            activityCatalog.details(of: activity.id).value?.elevation != nil
+        {
+            metrics.append(contentsOf: [averageElevation, minElevation, maxElevation])
+        }
+
+        if activityCatalog.details(of: activity.id).isLoading ||
+            activityCatalog.details(of: activity.id).value?.speed != nil
+        {
+            metrics.append(contentsOf: [averageSpeed, maxSpeed])
+        }
+
+        return metrics
     }
 
     var totalDuration: WidgetConfiguration {
